@@ -13,7 +13,7 @@ Deno.test("cannot use the constructor directly", () => {
       new Screen({ outputStream: w }, Symbol());
     },
     undefined,
-    "You may not use the `Screen` constructor directly"
+    "You may not use the `Screen` constructor directly",
   );
 });
 
@@ -25,7 +25,7 @@ Deno.test("cannot create multiple Screen instances", async () => {
       await Screen.create(w);
     },
     undefined,
-    "Only one `Screen` instance can exist at a time"
+    "Only one `Screen` instance can exist at a time",
   );
 
   await first.cleanup();

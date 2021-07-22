@@ -3,9 +3,9 @@ import {
   assertThrows,
 } from "https://deno.land/std/testing/asserts.ts";
 import {
-  Spy,
   assertSpyCall,
   assertSpyCalls,
+  Spy,
   spy,
 } from "https://deno.land/x/mock@v0.10.0/mod.ts";
 import { Matrix } from "../lib/matrix.ts";
@@ -28,14 +28,14 @@ Deno.test("validating access with `get`", () => {
       matrix.get(1, 0);
     },
     undefined,
-    "Invalid coordinate access"
+    "Invalid coordinate access",
   );
   assertThrows(
     () => {
       matrix.get(0, 1);
     },
     undefined,
-    "Invalid coordinate access"
+    "Invalid coordinate access",
   );
 });
 
@@ -47,14 +47,14 @@ Deno.test("validating access with `set`", () => {
       matrix.set(1, 0, 1);
     },
     undefined,
-    "Invalid coordinate access"
+    "Invalid coordinate access",
   );
   assertThrows(
     () => {
       matrix.set(0, 1, 1);
     },
     undefined,
-    "Invalid coordinate access"
+    "Invalid coordinate access",
   );
 });
 

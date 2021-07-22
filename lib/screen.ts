@@ -31,7 +31,7 @@ export class Screen {
       rid = Deno.stdin.rid,
       initialSize = Deno.consoleSize(Deno.stdin.rid),
     }: ScreenConfig = {},
-    privateSymbol: symbol
+    privateSymbol: symbol,
   ) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
       throw new Error("You may not use the `Screen` constructor directly");
@@ -45,11 +45,7 @@ export class Screen {
     Screen.instance = this;
 
     // Initial State
-    this.matrix = new Matrix(
-      initialSize.columns,
-      initialSize.rows,
-      new Cell(" ", Colors.WHITE, Colors.BLACK)
-    );
+    this.matrix = new Matrix(initialSize.columns, initialSize.rows, new Cell());
     this.outputStream = outputStream;
     this.terminalRid = rid;
   }
@@ -59,7 +55,7 @@ export class Screen {
       {
         outputStream,
       },
-      CANNOT_USE_CONSTRUCTOR_DIRECTLY
+      CANNOT_USE_CONSTRUCTOR_DIRECTLY,
     );
 
     Deno.setRaw(instance.terminalRid, true);
@@ -71,17 +67,8 @@ export class Screen {
         EscapeSequence.SAVE_CURSOR_POS +
         EscapeSequence.HIDE_CURSOR +
         EscapeSequence.ENABLE_MOUSE_REPORT +
-        EscapeSequence.CLS
+        EscapeSequence.CLS,
     );
-
-    let buffer = "";
-
-    // Write initial screen state
-    for (const [x, y, cell] of instance.matrix) {
-      buffer += cell.toBufferSegment(x, y);
-    }
-
-    await writeToStream(instance.outputStream, buffer);
 
     return instance;
   }
@@ -90,10 +77,9 @@ export class Screen {
     let buffer = "";
 
     const setterCallback: SetterCallback = (x, y, content) => {
-      const cell =
-        typeof content === "string"
-          ? new Cell(content, Colors.WHITE, Colors.BLACK)
-          : content;
+      const cell = typeof content === "string"
+        ? new Cell(content, Colors.WHITE)
+        : content;
 
       this.matrix.set(x, y, cell);
 
@@ -114,7 +100,7 @@ export class Screen {
         EscapeSequence.CLS +
         EscapeSequence.RMCUP +
         EscapeSequence.RESTORE_CURSOR_POS +
-        EscapeSequence.SHOW_CURSOR
+        EscapeSequence.SHOW_CURSOR,
     );
 
     Screen.instance = undefined;
