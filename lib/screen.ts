@@ -6,9 +6,9 @@ import { Matrix } from "./matrix.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
-interface ScreenConfig {
+export interface ScreenConfig {
   outputStream?: Deno.Writer;
-  rid?: number;
+  rid?: number | null;
   initialSize?: {
     columns: number;
     rows: number;
@@ -23,13 +23,13 @@ export class Screen {
 
   private outputStream: Deno.Writer;
   private matrix: Matrix<Cell>;
-  private terminalRid: number;
+  private terminalRid: number | null;
 
   constructor(
     {
       outputStream = Deno.stdout,
-      rid = Deno.stdin.rid,
-      initialSize = Deno.consoleSize(Deno.stdin.rid),
+      rid = Deno.stdout.rid,
+      initialSize = Deno.consoleSize(Deno.stdout.rid),
     }: ScreenConfig = {},
     privateSymbol: symbol,
   ) {
@@ -50,15 +50,12 @@ export class Screen {
     this.terminalRid = rid;
   }
 
-  static async create(outputStream?: Deno.Writer): Promise<Screen> {
-    const instance = new Screen(
-      {
-        outputStream,
-      },
-      CANNOT_USE_CONSTRUCTOR_DIRECTLY,
-    );
+  static async create(config: ScreenConfig = {}): Promise<Screen> {
+    const instance = new Screen(config, CANNOT_USE_CONSTRUCTOR_DIRECTLY);
 
-    Deno.setRaw(instance.terminalRid, true);
+    if (instance.terminalRid) {
+      Deno.setRaw(instance.terminalRid, true);
+    }
 
     // Set up the output stream
     await writeToStream(
@@ -92,7 +89,9 @@ export class Screen {
   }
 
   async cleanup() {
-    Deno.setRaw(this.terminalRid, false);
+    if (this.terminalRid) {
+      Deno.setRaw(this.terminalRid, false);
+    }
 
     await writeToStream(
       this.outputStream,
