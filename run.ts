@@ -10,15 +10,9 @@ await screen.transaction((write) => {
   write(3, 0, "e");
 });
 
-events:
 for await (const event of detectTerminalEvents(Deno.stdin)) {
   switch (event.type) {
     case "KEYBOARD":
-      // This is sent for `CTRL-C`, for some reason
-      if (event.ctrl && event.key === 2) {
-        break events;
-      }
-
       await screen.transaction((set) => {
         // Fill text content at a position
 

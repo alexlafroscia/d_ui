@@ -81,6 +81,11 @@ export async function* detectTerminalEvents(
       event = createKeyboardEvent(key);
     }
 
+    // Stop producing events if the user pressed `CTL-C`
+    if (event.type === "KEYBOARD" && event.ctrl && event.key === Key.C) {
+      break;
+    }
+
     yield event;
   }
 }
