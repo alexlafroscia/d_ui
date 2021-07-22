@@ -1,19 +1,34 @@
-import { delay } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util.ts";
-
-import { Cell, Colors } from "./lib/cell.ts";
+import { detectTerminalEvents } from "./lib/events.ts";
 import { Screen } from "./lib/screen.ts";
 
 const screen = await Screen.create();
 
-await screen.transaction((set) => {
-  // Fill text content at a position
-  set(0, 0, "A");
-  set(0, 1, "B");
-
-  // Use a `Cell` to specify a color
-  set(1, 0, new Cell("C", Colors.RED, Colors.BLACK));
+await screen.transaction((write) => {
+  write(0, 0, "T");
+  write(1, 0, "y");
+  write(2, 0, "p");
+  write(3, 0, "e");
 });
 
-await delay(1000);
+events:
+for await (const event of detectTerminalEvents(Deno.stdin)) {
+  switch (event.type) {
+    case "KEYBOARD":
+      // This is sent for `CTRL-C`, for some reason
+      if (event.ctrl && event.key === 2) {
+        break events;
+      }
+
+      await screen.transaction((set) => {
+        // Fill text content at a position
+
+        // @ts-ignore The key is a string; this will work
+        set(0, 2, event.key as string);
+      });
+      break;
+    default:
+      break;
+  }
+}
 
 await screen.cleanup();
