@@ -15,7 +15,11 @@ export interface ScreenConfig {
   };
 }
 
-type SetterCallback = (x: number, y: number, content: Cell | string) => void;
+export type SetterCallback = (
+  x: number,
+  y: number,
+  content: Cell | string,
+) => void;
 type RenderCallback = (setter: SetterCallback) => Promise<void> | void;
 
 export class Screen {
