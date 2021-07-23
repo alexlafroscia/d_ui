@@ -1,5 +1,5 @@
-import { SetterCallback as Writer } from "../screen.ts";
+import { Point, SetterCallback as Writer } from "../screen.ts";
 
 export interface Widget {
-  render(originX: number, originY: number, writer: Writer): void;
+  render(orign: Point, writer: Writer): void;
 }

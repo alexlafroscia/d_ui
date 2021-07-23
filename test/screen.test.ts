@@ -34,3 +34,15 @@ Deno.test("cannot create multiple Screen instances", async () => {
 
   await first.cleanup();
 });
+
+Deno.test("cannot render outside of a transaction", async () => {
+  const screen = await Screen.create(screenConfig);
+
+  assertThrows(
+    () => {
+      screen.render({ render() {} });
+    },
+    undefined,
+    "`render` can only be called during a transaction",
+  );
+});

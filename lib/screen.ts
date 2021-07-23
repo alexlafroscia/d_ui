@@ -3,6 +3,8 @@ import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util
 
 import { Cell, Colors } from "./cell.ts";
 import { Matrix } from "./matrix.ts";
+import { View } from "./view.ts";
+import { Widget } from "./widgets/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -15,15 +17,17 @@ export interface ScreenConfig {
   };
 }
 
-export type SetterCallback = (
-  x: number,
-  y: number,
-  content: Cell | string,
-) => void;
-type RenderCallback = (setter: SetterCallback) => Promise<void> | void;
+export interface Point {
+  x: number;
+  y: number;
+}
 
-export class Screen {
+export type SetterCallback = (point: Point, content: Cell | string) => void;
+
+export class Screen extends View {
   private static instance: Screen | undefined;
+
+  private transactionBuffer: string | undefined;
 
   private outputStream: Deno.Writer;
   private matrix: Matrix<Cell>;
@@ -44,6 +48,8 @@ export class Screen {
     if (Screen.instance) {
       throw new Error("Only one `Screen` instance can exist at a time");
     }
+
+    super({ x: 0, y: 0 }, initialSize.rows, initialSize.columns);
 
     // Ensure we have a singleton `Screen`
     Screen.instance = this;
@@ -74,22 +80,32 @@ export class Screen {
     return instance;
   }
 
-  async transaction(cb: RenderCallback): Promise<void> {
-    let buffer = "";
+  async transaction(
+    setupNextRenderCallback: () => Promise<void> | void,
+  ): Promise<void> {
+    this.transactionBuffer = "";
 
-    const setterCallback: SetterCallback = (x, y, content) => {
+    await setupNextRenderCallback();
+
+    await writeToStream(this.outputStream, this.transactionBuffer);
+
+    this.transactionBuffer = undefined;
+  }
+
+  render(widget: Widget) {
+    if (typeof this.transactionBuffer === "undefined") {
+      throw new Error("`render` can only be called during a transaction");
+    }
+
+    widget.render(this.origin, (point, content) => {
       const cell = typeof content === "string"
         ? new Cell(content, Colors.WHITE)
         : content;
 
-      this.matrix.set(x, y, cell);
+      this.matrix.set(point.x, point.y, cell);
 
-      buffer += cell.toBufferSegment(x, y);
-    };
-
-    await cb(setterCallback);
-
-    await writeToStream(this.outputStream, buffer);
+      this.transactionBuffer += cell.toBufferSegment(point.x, point.y);
+    });
   }
 
   async cleanup() {

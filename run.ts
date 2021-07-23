@@ -4,14 +4,15 @@ import { Text } from "./lib/widgets/text.ts";
 
 const screen = await Screen.create();
 
-await screen.transaction((write) => {
+await screen.transaction(() => {
   const text = new Text("Type");
-  text.render(0, 0, write);
+  screen.render(text);
 });
 
 let buffer = "";
 
 for await (const event of detectTerminalEvents(Deno.stdin)) {
+  // Handle next event
   switch (event.type) {
     case "KEYBOARD":
       // @ts-ignore translate key to string
@@ -21,10 +22,11 @@ for await (const event of detectTerminalEvents(Deno.stdin)) {
       break;
   }
 
-  await screen.transaction((write) => {
+  // Re-render
+  await screen.transaction(() => {
     const text = new Text(buffer);
 
-    text.render(0, 2, write);
+    screen.render(text);
   });
 }
 
