@@ -2,7 +2,13 @@ function checkAccess(array: Array<unknown>, index: number): boolean {
   return array.length > index;
 }
 
-export class Matrix<T> {
+interface MatrixLike<T> {
+  get(row: number, column: number): T | undefined;
+
+  set(row: number, column: number, value: T): void;
+}
+
+export class Matrix<T> implements MatrixLike<T> {
   private rows: T[][];
 
   constructor(numberOfRows: number, numberOfColumns: number, fallbackValue: T) {
@@ -30,7 +36,7 @@ export class Matrix<T> {
     }
   }
 
-  get(row: number, column: number): T | undefined {
+  get(row: number, column: number): T {
     this.validateAccess(row, column);
 
     return this.rows[row][column];
@@ -56,5 +62,25 @@ export class Matrix<T> {
       columnIndex = 0;
       rowIndex += 1;
     }
+  }
+}
+
+export class Lens<T> implements MatrixLike<T> {
+  constructor(
+    private parent: Matrix<T>,
+    private rowOffset: number,
+    private columnOffset: number,
+  ) {}
+
+  get(row: number, column: number): T | undefined {
+    return this.parent.get(row + this.rowOffset, column + this.columnOffset);
+  }
+
+  set(row: number, column: number, value: T) {
+    return this.parent.set(
+      row + this.rowOffset,
+      column + this.columnOffset,
+      value,
+    );
   }
 }

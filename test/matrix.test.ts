@@ -8,7 +8,7 @@ import {
   Spy,
   spy,
 } from "https://deno.land/x/mock@v0.10.0/mod.ts";
-import { Matrix } from "../lib/matrix.ts";
+import { Lens, Matrix } from "../lib/matrix.ts";
 
 Deno.test("using a matrix", () => {
   const matrix = new Matrix(1, 1, 0);
@@ -88,4 +88,22 @@ Deno.test("iterating over each element", () => {
 
   // Ensure it's only called 4 times
   assertSpyCalls(each, 4);
+});
+
+Deno.test("using a Lens to interact with a Matrix", () => {
+  const matrix = new Matrix(3, 3, false);
+  const lens = new Lens(matrix, 1, 2);
+
+  lens.set(0, 0, true);
+
+  assertEquals(
+    lens.get(0, 0),
+    true,
+    "Set the correct coordinate through the lens",
+  );
+  assertEquals(
+    matrix.get(1, 2),
+    true,
+    "Set the correct coordinate on the parent",
+  );
 });
