@@ -71,9 +71,9 @@ export async function* detectTerminalEvents(
       } else {
         const enumIndex = sequence.charCodeAt(0) - "a".charCodeAt(0);
 
+        // Only handle lowercase letters for now
         if (enumIndex < 0) {
-          // Only handle lowercase letters for now
-          return;
+          continue;
         }
         key = (<unknown> Key[enumIndex]) as Key;
       }
