@@ -1,10 +1,10 @@
 import * as EscapeSequence from "https://deno.land/x/terminal@0.1.0-dev.3/src/escape_sequences.ts";
 import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util.ts";
+import { reduce } from "https://deno.land/x/iter@v2.3.0/mod.ts";
 
-import { Cell, Colors } from "./cell.ts";
+import { Cell } from "./cell.ts";
 import { Matrix } from "./matrix.ts";
 import { View } from "./view.ts";
-import { Widget } from "./widgets/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -27,10 +27,7 @@ export type SetterCallback = (point: Point, content: Cell | string) => void;
 export class Screen extends View {
   private static instance: Screen | undefined;
 
-  private transactionBuffer: string | undefined;
-
   private outputStream: Deno.Writer;
-  private matrix: Matrix<Cell>;
   private terminalRid: number | null;
 
   constructor(
@@ -49,17 +46,23 @@ export class Screen extends View {
       throw new Error("Only one `Screen` instance can exist at a time");
     }
 
-    super({ x: 0, y: 0 }, initialSize.rows, initialSize.columns);
+    super(
+      { x: 0, y: 0 },
+      new Matrix(initialSize.columns, initialSize.rows, new Cell()),
+      new Set(),
+    );
 
     // Ensure we have a singleton `Screen`
     Screen.instance = this;
 
     // Initial State
-    this.matrix = new Matrix(initialSize.columns, initialSize.rows, new Cell());
     this.outputStream = outputStream;
     this.terminalRid = rid;
   }
 
+  /**
+   * Create a `Screen` instance and prepare `STDOUT` for writing
+   */
   static async create(config: ScreenConfig = {}): Promise<Screen> {
     const instance = new Screen(config, CANNOT_USE_CONSTRUCTOR_DIRECTLY);
 
@@ -80,34 +83,32 @@ export class Screen extends View {
     return instance;
   }
 
+  /**
+   * Perform some rendering, then automatically flush the buffer to the screen
+   */
   async transaction(
     setupNextRenderCallback: () => Promise<void> | void,
   ): Promise<void> {
-    this.transactionBuffer = "";
-
     await setupNextRenderCallback();
 
-    await writeToStream(this.outputStream, this.transactionBuffer);
-
-    this.transactionBuffer = undefined;
+    await this.flush();
   }
 
-  render(widget: Widget) {
-    if (typeof this.transactionBuffer === "undefined") {
-      throw new Error("`render` can only be called during a transaction");
-    }
+  /**
+   * Writes the buffer to the screen
+   */
+  async flush() {
+    await writeToStream(
+      this.outputStream,
+      reduce(this.renderingQueue, (str, segment) => str + segment, ""),
+    );
 
-    widget.render(this.origin, (point, content) => {
-      const cell = typeof content === "string"
-        ? new Cell(content, Colors.WHITE)
-        : content;
-
-      this.matrix.set(point.x, point.y, cell);
-
-      this.transactionBuffer += cell.toBufferSegment(point.x, point.y);
-    });
+    this.renderingQueue.clear();
   }
 
+  /**
+   * Restore `STDOUT` to normal working order
+   */
   async cleanup() {
     if (this.terminalRid) {
       Deno.setRaw(this.terminalRid, false);
