@@ -2,7 +2,10 @@ function checkAccess(array: Array<unknown>, index: number): boolean {
   return array.length > index;
 }
 
-interface MatrixLike<T> {
+export interface MatrixLike<T> {
+  height: number;
+  width: number;
+
   get(row: number, column: number): T | undefined;
 
   set(row: number, column: number, value: T): void;
@@ -18,6 +21,14 @@ export class Matrix<T> implements MatrixLike<T> {
       this.rows[i] = new Array(numberOfColumns);
       this.rows[i].fill(fallbackValue);
     }
+  }
+
+  get height() {
+    return this.rows.length;
+  }
+
+  get width() {
+    return this.rows[0].length;
   }
 
   private validateAccess(row: number, column: number) {
@@ -67,10 +78,18 @@ export class Matrix<T> implements MatrixLike<T> {
 
 export class Lens<T> implements MatrixLike<T> {
   constructor(
-    private parent: Matrix<T>,
+    private parent: MatrixLike<T>,
     private rowOffset: number,
     private columnOffset: number,
   ) {}
+
+  get height() {
+    return this.parent.height - this.rowOffset;
+  }
+
+  get width() {
+    return this.parent.width - this.columnOffset;
+  }
 
   get(row: number, column: number): T | undefined {
     return this.parent.get(row + this.rowOffset, column + this.columnOffset);

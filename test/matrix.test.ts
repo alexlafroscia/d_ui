@@ -11,13 +11,16 @@ import {
 import { Lens, Matrix } from "../lib/matrix.ts";
 
 Deno.test("using a matrix", () => {
-  const matrix = new Matrix(1, 1, 0);
+  const matrix = new Matrix(1, 2, 0);
 
   assertEquals(matrix.get(0, 0), 0);
 
   matrix.set(0, 0, 1);
 
   assertEquals(matrix.get(0, 0), 1);
+
+  assertEquals(matrix.height, 1);
+  assertEquals(matrix.width, 2);
 });
 
 Deno.test("validating access with `get`", () => {
@@ -106,4 +109,7 @@ Deno.test("using a Lens to interact with a Matrix", () => {
     true,
     "Set the correct coordinate on the parent",
   );
+
+  assertEquals(lens.height, 2);
+  assertEquals(lens.width, 1);
 });
