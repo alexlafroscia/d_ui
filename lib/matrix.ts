@@ -36,13 +36,13 @@ export class Matrix<T> implements MatrixLike<T> {
     return this.rows[0].length;
   }
 
-  private validateAccess(row: number, column: number) {
+  private validateAccess(x: number, y: number) {
     let isValid = false;
 
-    if (checkAccess(this.rows, row)) {
-      const columns = this.rows[row];
+    if (checkAccess(this.rows, y)) {
+      const columns = this.rows[y];
 
-      if (checkAccess(columns, column)) {
+      if (checkAccess(columns, x)) {
         isValid = true;
       }
     }
@@ -52,32 +52,16 @@ export class Matrix<T> implements MatrixLike<T> {
     }
   }
 
-  get(row: number, column: number): T {
-    this.validateAccess(row, column);
+  get(x: number, y: number): T {
+    this.validateAccess(x, y);
 
-    return this.rows[row][column];
+    return this.rows[y][x];
   }
 
-  set(row: number, column: number, value: T) {
-    this.validateAccess(row, column);
+  set(x: number, y: number, value: T) {
+    this.validateAccess(x, y);
 
-    this.rows[row][column] = value;
-  }
-
-  *[Symbol.iterator](): Iterator<[number, number, T]> {
-    let rowIndex = 0;
-    let columnIndex = 0;
-
-    for (const column of this.rows) {
-      for (const value of column) {
-        yield [rowIndex, columnIndex, value];
-
-        columnIndex += 1;
-      }
-
-      columnIndex = 0;
-      rowIndex += 1;
-    }
+    this.rows[y][x] = value;
   }
 }
 

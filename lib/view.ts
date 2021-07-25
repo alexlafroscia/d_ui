@@ -38,7 +38,7 @@ export class View {
   split(first: Split, second: Split): [View, View];
   split(...fractions: Split[]): View[] {
     return fractions.map((fraction, index) => {
-      const x = Math.ceil(this.matrix.height * fraction) * index;
+      const x = Math.ceil(this.matrix.width * fraction) * index;
 
       return new View(
         { x, y: this.origin.y },

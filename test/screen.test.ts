@@ -1,4 +1,5 @@
 import {
+  assertEquals,
   assertThrows,
   assertThrowsAsync,
 } from "https://deno.land/std/testing/asserts.ts";
@@ -8,7 +9,7 @@ import { Screen, ScreenConfig } from "../lib/screen.ts";
 const screenConfig: ScreenConfig = {
   outputStream: new StringWriter("dummy"),
   rid: null, // When `null`, we avoid using `Deno.setRaw`
-  initialSize: { columns: 1, rows: 1 },
+  initialSize: { columns: 2, rows: 4 },
 };
 
 Deno.test("cannot use the constructor directly", () => {
@@ -45,4 +46,23 @@ Deno.test("cannot render outside of a transaction", async () => {
     undefined,
     "`render` can only be called during a transaction",
   );
+
+  await screen.cleanup();
+});
+
+Deno.test("the height and width match the initial size", async () => {
+  const screen = await Screen.create(screenConfig);
+
+  assertEquals(
+    screen.height,
+    screenConfig.initialSize?.rows,
+    "The height matches the expected value",
+  );
+  assertEquals(
+    screen.width,
+    screenConfig.initialSize?.columns,
+    "The width matches the expected value",
+  );
+
+  await screen.cleanup();
 });

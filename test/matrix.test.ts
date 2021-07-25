@@ -2,12 +2,6 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std/testing/asserts.ts";
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  Spy,
-  spy,
-} from "https://deno.land/x/mock@v0.10.0/mod.ts";
 import { Lens, Matrix } from "../lib/matrix.ts";
 
 Deno.test("using a matrix", () => {
@@ -59,38 +53,6 @@ Deno.test("validating access with `set`", () => {
     undefined,
     "Invalid coordinate access",
   );
-});
-
-Deno.test("iterating over each element", () => {
-  const matrix = new Matrix(2, 2, "");
-
-  matrix.set(0, 0, "a");
-  matrix.set(0, 1, "b");
-  matrix.set(1, 0, "c");
-  matrix.set(1, 1, "d");
-
-  const each: Spy<void> = spy();
-
-  for (const args of matrix) {
-    each(...args);
-  }
-
-  // Check each `each` call
-  assertSpyCall(each, 0, {
-    args: [0, 0, "a"],
-  });
-  assertSpyCall(each, 1, {
-    args: [0, 1, "b"],
-  });
-  assertSpyCall(each, 2, {
-    args: [1, 0, "c"],
-  });
-  assertSpyCall(each, 3, {
-    args: [1, 1, "d"],
-  });
-
-  // Ensure it's only called 4 times
-  assertSpyCalls(each, 4);
 });
 
 Deno.test("using a Lens to interact with a Matrix", () => {
