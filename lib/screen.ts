@@ -22,6 +22,7 @@ export type SetterCallback = (point: Point, content: Cell | string) => void;
 export class Screen extends View {
   private static instance: Screen | undefined;
 
+  private transactionInProgress = false;
   private outputStream: Deno.Writer;
   private terminalRid: number | null;
 
@@ -45,6 +46,7 @@ export class Screen extends View {
       { x: 0, y: 0 },
       new Matrix(initialSize.columns, initialSize.rows, new Cell()),
       new Set(),
+      () => this.transactionInProgress,
     );
 
     // Ensure we have a singleton `Screen`
@@ -84,21 +86,17 @@ export class Screen extends View {
   async transaction(
     setupNextRenderCallback: () => Promise<void> | void,
   ): Promise<void> {
+    this.transactionInProgress = true;
+
     await setupNextRenderCallback();
 
-    await this.flush();
-  }
-
-  /**
-   * Writes the buffer to the screen
-   */
-  async flush() {
     await writeToStream(
       this.outputStream,
       reduce(this.renderingQueue, (str, segment) => str + segment, ""),
     );
 
     this.renderingQueue.clear();
+    this.transactionInProgress = false;
   }
 
   /**
