@@ -1,15 +1,15 @@
-import { Point } from "../matrix.ts";
-import { SetterCallback as Writer } from "../screen.ts";
 import { Widget } from "./mod.ts";
+import { View } from "../view.ts";
+import { WriteToScreen } from "../screen.ts";
 
 export class Text implements Widget {
   constructor(private content: string) {}
 
-  render(origin: Point, writer: Writer) {
-    let { x, y } = origin;
+  render(view: View, write: WriteToScreen) {
+    let { x, y } = view.origin;
 
     for (const character of this.content) {
-      writer({ x: x++, y }, character);
+      write({ x: x++, y }, character);
     }
   }
 }

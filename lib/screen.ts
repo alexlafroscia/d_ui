@@ -17,7 +17,7 @@ export interface ScreenConfig {
   };
 }
 
-export type SetterCallback = (point: Point, content: Cell | string) => void;
+export type WriteToScreen = (point: Point, content: Cell | string) => void;
 
 export class Screen extends View {
   private static instance: Screen | undefined;

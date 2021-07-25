@@ -2,29 +2,51 @@ import { Cell, Colors } from "./cell.ts";
 import { Lens, MatrixLike, Point } from "./matrix.ts";
 import { Widget } from "./widgets/mod.ts";
 
+export enum Split {
+  Quarter = 0.25,
+  Third = 1 / 3,
+  Half = 0.5,
+}
+
 export class View {
+  origin: Point;
+
   constructor(
-    protected origin: Point,
+    origin: Point,
     protected matrix: MatrixLike<Cell>,
     protected renderingQueue: Set<string>,
     private canRenderCallback: () => boolean,
-  ) {}
+  ) {
+    this.origin = origin;
+  }
 
-  split(): [View, View] {
-    return [
-      new View(
-        this.origin,
+  get height() {
+    return this.matrix.height;
+  }
+
+  get width() {
+    return this.matrix.width;
+  }
+
+  split(
+    first: Split,
+    second: Split,
+    third: Split,
+    fourth: Split,
+  ): [View, View, View, View];
+  split(first: Split, second: Split, third: Split): [View, View, View];
+  split(first: Split, second: Split): [View, View];
+  split(...fractions: Split[]): View[] {
+    return fractions.map((fraction, index) => {
+      const x = Math.ceil(this.matrix.height * fraction) * index;
+
+      return new View(
+        { x, y: this.origin.y },
         new Lens(this.matrix, 0, 0),
         this.renderingQueue,
         this.canRenderCallback,
-      ),
-      new View(
-        { ...this.origin, x: Math.ceil(this.matrix.height / 2) },
-        new Lens(this.matrix, 0, Math.ceil(this.matrix.width / 2)),
-        this.renderingQueue,
-        this.canRenderCallback,
-      ),
-    ];
+      );
+    });
   }
 
   render(widget: Widget) {

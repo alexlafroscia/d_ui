@@ -1,6 +1,6 @@
-import { Point } from "../matrix.ts";
-import { SetterCallback as Writer } from "../screen.ts";
+import { WriteToScreen } from "../screen.ts";
+import { View } from "../view.ts";
 
 export interface Widget {
-  render(orign: Point, writer: Writer): void;
+  render(view: View, write: WriteToScreen): void;
 }

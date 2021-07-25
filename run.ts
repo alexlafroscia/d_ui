@@ -1,9 +1,10 @@
 import { detectTerminalEvents } from "./lib/events.ts";
+import { Split } from "./lib/view.ts";
 import { Screen } from "./lib/screen.ts";
 import { Text } from "./lib/widgets/text.ts";
 
 const screen = await Screen.create();
-const [left, right] = screen.split();
+const [left, right] = screen.split(Split.Half, Split.Half);
 
 await screen.transaction(() => {
   const text = new Text("Type");
