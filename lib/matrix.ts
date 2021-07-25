@@ -1,5 +1,6 @@
-function checkAccess(array: Array<unknown>, index: number): boolean {
-  return array.length > index;
+export interface Point {
+  x: number;
+  y: number;
 }
 
 export interface MatrixLike<T> {
@@ -9,6 +10,10 @@ export interface MatrixLike<T> {
   get(row: number, column: number): T | undefined;
 
   set(row: number, column: number, value: T): void;
+}
+
+function checkAccess(array: Array<unknown>, index: number): boolean {
+  return array.length > index;
 }
 
 export class Matrix<T> implements MatrixLike<T> {

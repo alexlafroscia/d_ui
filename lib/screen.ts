@@ -3,7 +3,7 @@ import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util
 import { reduce } from "https://deno.land/x/iter@v2.3.0/mod.ts";
 
 import { Cell } from "./cell.ts";
-import { Matrix } from "./matrix.ts";
+import { Matrix, Point } from "./matrix.ts";
 import { View } from "./view.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
@@ -15,11 +15,6 @@ export interface ScreenConfig {
     columns: number;
     rows: number;
   };
-}
-
-export interface Point {
-  x: number;
-  y: number;
 }
 
 export type SetterCallback = (point: Point, content: Cell | string) => void;

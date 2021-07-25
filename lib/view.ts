@@ -1,6 +1,5 @@
 import { Cell, Colors } from "./cell.ts";
-import { Lens, MatrixLike } from "./matrix.ts";
-import { Point } from "./screen.ts";
+import { Lens, MatrixLike, Point } from "./matrix.ts";
 import { Widget } from "./widgets/mod.ts";
 
 export class View {

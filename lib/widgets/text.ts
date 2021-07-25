@@ -1,4 +1,5 @@
-import { Point, SetterCallback as Writer } from "../screen.ts";
+import { Point } from "../matrix.ts";
+import { SetterCallback as Writer } from "../screen.ts";
 import { Widget } from "./mod.ts";
 
 export class Text implements Widget {
