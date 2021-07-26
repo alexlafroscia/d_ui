@@ -1,10 +1,11 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { MemoryBackend } from "../lib/backend/memory.ts";
 import { Cell } from "../lib/cell.ts";
 import { View } from "../lib/view.ts";
 import { Matrix } from "../lib/matrix.ts";
 
 function createView() {
-  return new View(new Matrix(8, 8, new Cell(" ")), new Set(), () => true);
+  return new View(new MemoryBackend(8, 8), new Matrix(8, 8, new Cell(" ")));
 }
 
 Deno.test("creating a view", () => {

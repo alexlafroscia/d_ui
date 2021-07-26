@@ -1,5 +1,4 @@
-import { Widget } from "./mod.ts";
-import { View } from "../view.ts";
+import { View, Widget } from "./mod.ts";
 import { WriteToScreen } from "../screen.ts";
 
 export class Text implements Widget {
