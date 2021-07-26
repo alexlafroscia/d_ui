@@ -1,23 +1,22 @@
+import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import { Cell, Colors } from "./cell.ts";
-import { Lens, MatrixLike, Point } from "./matrix.ts";
+import { Lens, MatrixLike } from "./matrix.ts";
 import { Widget } from "./widgets/mod.ts";
-
-export enum Split {
-  Quarter = 0.25,
-  Third = 1 / 3,
-  Half = 0.5,
-}
+import { partition, Size } from "./view/partition.ts";
 
 export class View {
-  origin: Point;
-
   constructor(
-    origin: Point,
     protected matrix: MatrixLike<Cell>,
     protected renderingQueue: Set<string>,
     private canRenderCallback: () => boolean,
   ) {
-    this.origin = origin;
+    log.debug(
+      `Initializing View with width: ${this.width}, height ${this.height}`,
+    );
+  }
+
+  get origin() {
+    return this.matrix.from;
   }
 
   get height() {
@@ -29,28 +28,33 @@ export class View {
   }
 
   split(
-    first: Split,
-    second: Split,
-    third: Split,
-    fourth: Split,
+    first: Size,
+    second: Size,
+    third: Size,
+    fourth: Size,
   ): [View, View, View, View];
-  split(first: Split, second: Split, third: Split): [View, View, View];
-  split(first: Split, second: Split): [View, View];
-  split(...fractions: Split[]): View[] {
-    return fractions.map((fraction, index) => {
-      const width = Math.ceil(this.matrix.width * fraction);
-      const x = width * index;
-      const origin = { x, y: this.origin.y };
+  split(first: Size, second: Size, third: Size): [View, View, View];
+  split(first: Size, second: Size): [View, View];
+  split(...sizes: Size[]): View[] {
+    const widths = partition(this.width, ...sizes);
+    let widthUsed = 0;
 
-      return new View(
-        origin,
+    log.debug(`Split width ${this.width} into ${widths}`);
+
+    return widths.map((width) => {
+      const origin = { x: widthUsed, y: 0 };
+      const view = new View(
         new Lens(this.matrix, origin, {
-          x: origin.x + width,
-          y: this.origin.y,
+          x: origin.x + width - 1,
+          y: origin.y + this.height - 1,
         }),
         this.renderingQueue,
         this.canRenderCallback,
       );
+
+      widthUsed += width;
+
+      return view;
     });
   }
 

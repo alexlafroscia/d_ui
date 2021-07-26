@@ -4,6 +4,8 @@ export interface Point {
 }
 
 export abstract class MatrixLike<T> {
+  abstract from: Point;
+
   abstract height: number;
   abstract width: number;
 
@@ -30,6 +32,10 @@ export class Matrix<T> extends MatrixLike<T> {
       this.rows[i] = new Array(numberOfColumns);
       this.rows[i].fill(fallbackValue);
     }
+  }
+
+  get from() {
+    return { x: 0, y: 0 };
   }
 
   get height() {
@@ -64,7 +70,7 @@ export class Lens<T> extends MatrixLike<T> {
   /**
    * The point on the parent `Matrix` that represents the top-left corner of the `Lens`
    */
-  private from: Point;
+  from: Point;
 
   /**
    * The point on the parent `Matrix` that represents the bottom-right corner of the `Lens`

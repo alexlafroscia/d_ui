@@ -43,7 +43,6 @@ export class Screen extends View {
     }
 
     super(
-      { x: 0, y: 0 },
       new Matrix(initialSize.rows, initialSize.columns, new Cell()),
       new Set(),
       () => this.transactionInProgress,

@@ -1,19 +1,37 @@
+import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import { detectTerminalEvents } from "./lib/events.ts";
-import { Split } from "./lib/view.ts";
+import { Fill } from "./lib/view/partition.ts";
 import { Screen } from "./lib/screen.ts";
 import { Text } from "./lib/widgets/text.ts";
 
-const screen = await Screen.create();
-const [left, right] = screen.split(Split.Half, Split.Half);
+await log.setup({
+  handlers: {
+    file: new log.handlers.FileHandler("DEBUG", {
+      filename: "./log.txt",
+      formatter: "{levelName} {msg}",
+    }),
+  },
 
-await screen.transaction(() => {
-  const text = new Text("Type");
-  right.render(text);
+  loggers: {
+    default: {
+      level: "DEBUG",
+      handlers: ["file"],
+    },
+  },
 });
 
-let buffer = "";
+let screen;
 
 try {
+  screen = await Screen.create();
+  const [left, right] = screen.split(0.125, Fill);
+
+  await screen.transaction(() => {
+    const text = new Text("Type");
+    left.render(text);
+  });
+
+  let buffer = "";
   for await (const event of detectTerminalEvents(Deno.stdin)) {
     // Handle next event
     switch (event.type) {
@@ -29,9 +47,9 @@ try {
     await screen.transaction(() => {
       const text = new Text(buffer);
 
-      left.render(text);
+      right.render(text);
     });
   }
 } finally {
-  await screen.cleanup();
+  await screen?.cleanup();
 }
