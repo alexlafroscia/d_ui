@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std/testing/asserts.ts";
-import { Lens, Matrix } from "../lib/matrix.ts";
+import { Matrix } from "../../lib/matrix.ts";
 
 Deno.test("using a matrix", () => {
   const matrix = new Matrix(1, 2, 0);
@@ -53,25 +53,4 @@ Deno.test("validating access with `set`", () => {
     undefined,
     "Invalid coordinate access",
   );
-});
-
-Deno.test("using a Lens to interact with a Matrix", () => {
-  const matrix = new Matrix(3, 3, false);
-  const lens = new Lens(matrix, 1, 2);
-
-  lens.set(0, 0, true);
-
-  assertEquals(
-    lens.get(0, 0),
-    true,
-    "Set the correct coordinate through the lens",
-  );
-  assertEquals(
-    matrix.get(1, 2),
-    true,
-    "Set the correct coordinate on the parent",
-  );
-
-  assertEquals(lens.height, 2);
-  assertEquals(lens.width, 1);
 });

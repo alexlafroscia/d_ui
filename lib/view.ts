@@ -38,11 +38,16 @@ export class View {
   split(first: Split, second: Split): [View, View];
   split(...fractions: Split[]): View[] {
     return fractions.map((fraction, index) => {
-      const x = Math.ceil(this.matrix.width * fraction) * index;
+      const width = Math.ceil(this.matrix.width * fraction);
+      const x = width * index;
+      const origin = { x, y: this.origin.y };
 
       return new View(
-        { x, y: this.origin.y },
-        new Lens(this.matrix, 0, 0),
+        origin,
+        new Lens(this.matrix, origin, {
+          x: origin.x + width,
+          y: this.origin.y,
+        }),
         this.renderingQueue,
         this.canRenderCallback,
       );

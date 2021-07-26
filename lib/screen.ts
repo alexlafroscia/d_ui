@@ -1,4 +1,3 @@
-import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import * as EscapeSequence from "https://deno.land/x/terminal@0.1.0-dev.3/src/escape_sequences.ts";
 import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util.ts";
 import { reduce } from "https://deno.land/x/iter@v2.3.0/mod.ts";

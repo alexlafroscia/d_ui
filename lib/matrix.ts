@@ -3,23 +3,27 @@ export interface Point {
   y: number;
 }
 
-export interface MatrixLike<T> {
-  height: number;
-  width: number;
+export abstract class MatrixLike<T> {
+  abstract height: number;
+  abstract width: number;
 
-  get(row: number, column: number): T | undefined;
+  abstract get(row: number, column: number): T;
 
-  set(row: number, column: number, value: T): void;
+  abstract set(row: number, column: number, value: T): T;
+
+  protected validateAccess(x: number, y: number) {
+    if (x > this.width - 1 || y > this.height - 1) {
+      throw new Error(`Invalid coordinate access: ${x},${y}`);
+    }
+  }
 }
 
-function checkAccess(array: Array<unknown>, index: number): boolean {
-  return array.length > index;
-}
-
-export class Matrix<T> implements MatrixLike<T> {
+export class Matrix<T> extends MatrixLike<T> {
   private rows: T[][];
 
   constructor(numberOfRows: number, numberOfColumns: number, fallbackValue: T) {
+    super();
+
     this.rows = new Array(numberOfRows);
 
     for (let i = 0; i < numberOfRows; i++) {
@@ -36,59 +40,62 @@ export class Matrix<T> implements MatrixLike<T> {
     return this.rows[0].length;
   }
 
-  private validateAccess(x: number, y: number) {
-    let isValid = false;
-
-    if (checkAccess(this.rows, y)) {
-      const columns = this.rows[y];
-
-      if (checkAccess(columns, x)) {
-        isValid = true;
-      }
-    }
-
-    if (!isValid) {
-      throw new Error("Invalid coordinate access");
-    }
-  }
-
   get(x: number, y: number): T {
     this.validateAccess(x, y);
 
     return this.rows[y][x];
   }
 
-  set(x: number, y: number, value: T) {
+  set(x: number, y: number, value: T): T {
     this.validateAccess(x, y);
 
-    this.rows[y][x] = value;
+    return (this.rows[y][x] = value);
   }
 }
 
-export class Lens<T> implements MatrixLike<T> {
-  constructor(
-    private parent: MatrixLike<T>,
-    private rowOffset: number,
-    private columnOffset: number,
-  ) {}
+export class Lens<T> extends MatrixLike<T> {
+  /**
+   * The `MatrixLike` to create a Lens for
+   *
+   * The Lens will map onto a subset of points within this `MatrixLike`
+   */
+  private parent: MatrixLike<T>;
+
+  /**
+   * The point on the parent `Matrix` that represents the top-left corner of the `Lens`
+   */
+  private from: Point;
+
+  /**
+   * The point on the parent `Matrix` that represents the bottom-right corner of the `Lens`
+   */
+  private to: Point;
+
+  constructor(parent: MatrixLike<T>, from: Point, to: Point) {
+    super();
+
+    this.parent = parent;
+    this.from = from;
+    this.to = to;
+  }
 
   get height() {
-    return this.parent.height - this.rowOffset;
+    return this.to.y - this.from.y + 1;
   }
 
   get width() {
-    return this.parent.width - this.columnOffset;
+    return this.to.x - this.from.x + 1;
   }
 
-  get(row: number, column: number): T | undefined {
-    return this.parent.get(row + this.rowOffset, column + this.columnOffset);
+  get(x: number, y: number): T {
+    this.validateAccess(x, y);
+
+    return this.parent.get(x + this.from.x, y + this.from.y);
   }
 
-  set(row: number, column: number, value: T) {
-    return this.parent.set(
-      row + this.rowOffset,
-      column + this.columnOffset,
-      value,
-    );
+  set(x: number, y: number, value: T): T {
+    this.validateAccess(x, y);
+
+    return this.parent.set(x + this.from.x, y + this.from.y, value);
   }
 }
