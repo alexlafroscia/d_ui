@@ -11,10 +11,12 @@ interface ConsoleSize {
 
 export class StdoutBackend extends WriterBackend {
   private static instance: StdoutBackend | undefined;
+  private terminalRid: number | null;
 
   constructor(
     outputStream: Deno.Writer,
     { rows, columns }: ConsoleSize,
+    terminalRid: number | null = Deno.stdout.rid,
     privateSymbol: symbol,
   ) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
@@ -29,20 +31,26 @@ export class StdoutBackend extends WriterBackend {
 
     super(outputStream ?? Deno.stdout, rows, columns);
 
+    this.terminalRid = terminalRid;
+
     StdoutBackend.instance = this;
   }
 
   static async create(
     outputStream: Deno.Writer = Deno.stdout,
     consoleSize: ConsoleSize = Deno.consoleSize(Deno.stdout.rid),
+    terminalRid: number | null,
   ) {
     const instance = new StdoutBackend(
       outputStream,
       consoleSize,
+      terminalRid,
       CANNOT_USE_CONSTRUCTOR_DIRECTLY,
     );
 
-    Deno.setRaw(Deno.stdout.rid, true);
+    if (instance.terminalRid) {
+      Deno.setRaw(instance.terminalRid, true);
+    }
 
     // Set up the output stream
     await writeToStream(
@@ -58,7 +66,9 @@ export class StdoutBackend extends WriterBackend {
   }
 
   async cleanup() {
-    Deno.setRaw(Deno.stdout.rid, false);
+    if (this.terminalRid) {
+      Deno.setRaw(this.terminalRid, false);
+    }
 
     await writeToStream(
       this.outputStream,
