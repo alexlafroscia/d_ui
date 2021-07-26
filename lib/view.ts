@@ -2,11 +2,10 @@ import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import { Cell, Colors } from "./cell.ts";
 import { Lens, MatrixLike } from "./matrix.ts";
 import { Widget } from "./widgets/mod.ts";
-import { Backend } from "./backend/mod.ts";
 import { partition, Size } from "./view/partition.ts";
 
 export class View {
-  constructor(protected backend: Backend, protected matrix: MatrixLike<Cell>) {
+  constructor(protected matrix: MatrixLike<Cell>) {
     log.debug(
       `Initializing View with width: ${this.width}, height ${this.height}`,
     );
@@ -24,24 +23,23 @@ export class View {
     return this.matrix.width;
   }
 
-  split(
+  verticalSplit(
     first: Size,
     second: Size,
     third: Size,
     fourth: Size,
   ): [View, View, View, View];
-  split(first: Size, second: Size, third: Size): [View, View, View];
-  split(first: Size, second: Size): [View, View];
-  split(...sizes: Size[]): View[] {
+  verticalSplit(first: Size, second: Size, third: Size): [View, View, View];
+  verticalSplit(first: Size, second: Size): [View, View];
+  verticalSplit(...sizes: Size[]): View[] {
     const widths = partition(this.width, ...sizes);
     let widthUsed = 0;
 
     log.debug(`Split width ${this.width} into ${widths}`);
 
     return widths.map((width) => {
-      const origin = { x: widthUsed, y: 0 };
+      const origin = { x: widthUsed, y: this.origin.y };
       const view = new View(
-        this.backend,
         new Lens(this.matrix, origin, {
           x: origin.x + width - 1,
           y: origin.y + this.height - 1,
@@ -54,6 +52,35 @@ export class View {
     });
   }
 
+  horizontalSplit(
+    first: Size,
+    second: Size,
+    third: Size,
+    fourth: Size,
+  ): [View, View, View, View];
+  horizontalSplit(first: Size, second: Size, third: Size): [View, View, View];
+  horizontalSplit(first: Size, second: Size): [View, View];
+  horizontalSplit(...sizes: Size[]): View[] {
+    const heights = partition(this.height, ...sizes);
+    let heightUsed = 0;
+
+    log.debug(`Split height ${this.width} into ${heights}`);
+
+    return heights.map((height) => {
+      const origin = { x: this.origin.x, y: heightUsed };
+      const view = new View(
+        new Lens(this.matrix, origin, {
+          x: origin.x + this.width - 1,
+          y: origin.y + height - 1,
+        }),
+      );
+
+      heightUsed += height;
+
+      return view;
+    });
+  }
+
   render(widget: Widget) {
     widget.render(this, (point, content) => {
       const cell = typeof content === "string"
@@ -61,8 +88,6 @@ export class View {
         : content;
 
       this.matrix.set(point.x, point.y, cell);
-
-      this.backend.render(point, cell);
     });
   }
 }

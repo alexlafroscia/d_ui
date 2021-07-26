@@ -9,12 +9,22 @@ const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 export type WriteToScreen = (point: Point, content: Cell | string) => void;
 
 export class Screen extends View {
+  private backend: Backend;
+
   constructor(backend: Backend, privateSymbol: symbol) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
       throw new Error("You may not use the `Screen` constructor directly");
     }
 
-    super(backend, new Matrix(backend.height, backend.width, new Cell()));
+    const matrix = new Matrix(backend.height, backend.width, new Cell());
+
+    super(matrix);
+
+    this.backend = backend;
+
+    matrix.onUpdate = (point, cell) => {
+      this.backend.render(point, cell);
+    };
   }
 
   /**

@@ -1,3 +1,7 @@
+function withinRange(value: number, min: number, max: number): boolean {
+  return value >= min && value <= max;
+}
+
 export interface Point {
   x: number;
   y: number;
@@ -5,6 +9,7 @@ export interface Point {
 
 export abstract class MatrixLike<T> {
   abstract from: Point;
+  abstract to: Point;
 
   abstract height: number;
   abstract width: number;
@@ -14,7 +19,10 @@ export abstract class MatrixLike<T> {
   abstract set(row: number, column: number, value: T): T;
 
   protected validateAccess(x: number, y: number) {
-    if (x > this.width - 1 || y > this.height - 1) {
+    if (
+      !withinRange(x, 0, this.width - 1) ||
+      !withinRange(y, 0, this.height - 1)
+    ) {
       throw new Error(`Invalid coordinate access: ${x},${y}`);
     }
   }
@@ -22,6 +30,8 @@ export abstract class MatrixLike<T> {
 
 export class Matrix<T> extends MatrixLike<T> {
   private rows: T[][];
+
+  onUpdate?: (point: Point, value: T) => void;
 
   constructor(numberOfRows: number, numberOfColumns: number, fallbackValue: T) {
     super();
@@ -36,6 +46,10 @@ export class Matrix<T> extends MatrixLike<T> {
 
   get from() {
     return { x: 0, y: 0 };
+  }
+
+  get to() {
+    return { x: this.width - 1, y: this.height - 1 };
   }
 
   get height() {
@@ -54,6 +68,8 @@ export class Matrix<T> extends MatrixLike<T> {
 
   set(x: number, y: number, value: T): T {
     this.validateAccess(x, y);
+
+    this.onUpdate?.({ x, y }, value);
 
     return (this.rows[y][x] = value);
   }
@@ -75,7 +91,7 @@ export class Lens<T> extends MatrixLike<T> {
   /**
    * The point on the parent `Matrix` that represents the bottom-right corner of the `Lens`
    */
-  private to: Point;
+  to: Point;
 
   constructor(parent: MatrixLike<T>, from: Point, to: Point) {
     super();

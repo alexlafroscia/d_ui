@@ -4,11 +4,11 @@ import { WriteToScreen } from "../screen.ts";
 export class Text implements Widget {
   constructor(private content: string) {}
 
-  render(view: View, write: WriteToScreen) {
-    let { x, y } = view.origin;
+  render(_view: View, write: WriteToScreen) {
+    let x = 0;
 
     for (const character of this.content) {
-      write({ x: x++, y }, character);
+      write({ x: x++, y: 0 }, character);
     }
   }
 }

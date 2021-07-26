@@ -24,11 +24,14 @@ let screen;
 
 try {
   screen = await Screen.create();
-  const [left, right] = screen.split(0.125, Fill);
+  const [header, content, footer] = screen.horizontalSplit(1, Fill, 1);
+  const [left, right] = content.verticalSplit(0.125, Fill);
 
   await screen.transaction(() => {
-    const text = new Text("Type");
-    left.render(text);
+    header.render(new Text("x".repeat(header.width)));
+    footer.render(new Text("x".repeat(footer.width)));
+
+    left.render(new Text("Type"));
   });
 
   let buffer = "";
