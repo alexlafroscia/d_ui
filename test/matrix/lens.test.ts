@@ -5,19 +5,36 @@ import {
 import { Lens, Matrix } from "../../lib/matrix.ts";
 
 Deno.test("using a Lens to interact with a Matrix", () => {
-  const matrix = new Matrix(4, 4, false);
-  const lens = new Lens(matrix, { x: 1, y: 1 }, { x: 2, y: 2 });
+  const matrix = new Matrix(8, 8, false);
+  const lens = new Lens(matrix, { x: 2, y: 2 }, { x: 6, y: 6 });
 
-  assertEquals(lens.height, 2, "Computes the height from the coordinates");
-  assertEquals(lens.width, 2, "Computes the width from the coordinates");
+  assertEquals(lens.height, 5, "Computes the height from the coordinates");
+  assertEquals(lens.width, 5, "Computes the width from the coordinates");
 
-  matrix.set(1, 1, true);
+  matrix.set(2, 2, true);
 
   assertEquals(lens.get(0, 0), true, "The Lens reads through to the parent");
 
   lens.set(1, 1, true);
 
-  assertEquals(matrix.get(2, 2), true, "The Lens writes through to the parent");
+  assertEquals(matrix.get(3, 3), true, "The Lens writes through to the parent");
+});
+
+Deno.test("writing to the edges of a Matrix through a Lens", () => {
+  const matrix = new Matrix(4, 4, false);
+  const lens = new Lens(matrix, matrix.from, matrix.to);
+
+  for (let x = 0; x < lens.width; x++) {
+    for (let y = 0; y < lens.height; y++) {
+      lens.set(x, y, true);
+    }
+  }
+
+  for (let x = 0; x < lens.width; x++) {
+    for (let y = 0; y < lens.height; y++) {
+      assertEquals(matrix.get(x, y), lens.get(x, y));
+    }
+  }
 });
 
 Deno.test("validating access with `get`", () => {

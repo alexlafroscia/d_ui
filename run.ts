@@ -21,10 +21,26 @@ let screen;
 
 try {
   screen = await Screen.create();
-  const [header, content, footer] = screen.horizontalSplit(1, Fill, 1);
+  const [lineNumbers, _lineSpacer, rest] = screen.verticalSplit(2, 1, Fill);
+  const [
+    header,
+    _headerSpacer,
+    content,
+    _footerSpacer,
+    footer,
+  ] = rest.horizontalSplit(1, 1, Fill, 1, 1);
   const [left, right] = content.verticalSplit(0.125, Fill);
 
   await screen.transaction(() => {
+    // Write line numbers to screen
+    lineNumbers.render({
+      render(view, write) {
+        for (let i = 0; i < view.height; i++) {
+          write({ x: 0, y: i }, i.toString().padStart(2, "0"));
+        }
+      },
+    });
+
     header.render(new Text("x".repeat(header.width)));
     footer.render(new Text("x".repeat(footer.width)));
 

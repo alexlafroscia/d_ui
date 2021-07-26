@@ -28,6 +28,13 @@ export class View {
     second: Size,
     third: Size,
     fourth: Size,
+    fifth: Size,
+  ): [View, View, View, View, View];
+  verticalSplit(
+    first: Size,
+    second: Size,
+    third: Size,
+    fourth: Size,
   ): [View, View, View, View];
   verticalSplit(first: Size, second: Size, third: Size): [View, View, View];
   verticalSplit(first: Size, second: Size): [View, View];
@@ -38,7 +45,10 @@ export class View {
     log.debug(`Split width ${this.width} into ${widths}`);
 
     return widths.map((width) => {
-      const origin = { x: widthUsed, y: this.origin.y };
+      const origin = {
+        x: widthUsed,
+        y: 0,
+      };
       const view = new View(
         new Lens(this.matrix, origin, {
           x: origin.x + width - 1,
@@ -57,6 +67,13 @@ export class View {
     second: Size,
     third: Size,
     fourth: Size,
+    fifth: Size,
+  ): [View, View, View, View, View];
+  horizontalSplit(
+    first: Size,
+    second: Size,
+    third: Size,
+    fourth: Size,
   ): [View, View, View, View];
   horizontalSplit(first: Size, second: Size, third: Size): [View, View, View];
   horizontalSplit(first: Size, second: Size): [View, View];
@@ -67,7 +84,10 @@ export class View {
     log.debug(`Split height ${this.width} into ${heights}`);
 
     return heights.map((height) => {
-      const origin = { x: this.origin.x, y: heightUsed };
+      const origin = {
+        x: 0,
+        y: heightUsed,
+      };
       const view = new View(
         new Lens(this.matrix, origin, {
           x: origin.x + this.width - 1,
