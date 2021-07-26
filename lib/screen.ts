@@ -1,8 +1,7 @@
 import { Cell } from "./cell.ts";
-import { Matrix, Point } from "./matrix.ts";
+import { Matrix, Point } from "./matrix/mod.ts";
 import { View } from "./view.ts";
-import { Backend } from "./backend/mod.ts";
-import { StdoutBackend } from "./backend/stdout.ts";
+import { Backend, StdoutBackend } from "./backend/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 

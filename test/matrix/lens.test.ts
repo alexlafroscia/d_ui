@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std/testing/asserts.ts";
-import { Lens, Matrix } from "../../lib/matrix.ts";
+import { Lens, Matrix } from "../../lib/matrix/mod.ts";
 
 Deno.test("using a Lens to interact with a Matrix", () => {
   const matrix = new Matrix(8, 8, false);

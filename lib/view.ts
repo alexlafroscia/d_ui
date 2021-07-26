@@ -1,6 +1,6 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import { Cell, Colors } from "./cell.ts";
-import { Lens, MatrixLike } from "./matrix.ts";
+import { Lens, MatrixLike } from "./matrix/mod.ts";
 import { Widget } from "./widgets/mod.ts";
 import { partition, Size } from "./view/partition.ts";
 

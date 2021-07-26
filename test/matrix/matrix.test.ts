@@ -7,7 +7,7 @@ import {
   Spy,
   spy,
 } from "https://deno.land/x/mock@v0.10.0/mod.ts";
-import { Matrix } from "../../lib/matrix.ts";
+import { Matrix } from "../../lib/matrix/mod.ts";
 
 Deno.test("using a matrix", () => {
   const matrix = new Matrix(1, 2, 0);

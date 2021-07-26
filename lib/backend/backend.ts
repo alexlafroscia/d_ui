@@ -1,4 +1,4 @@
-import { Point } from "../matrix.ts";
+import { Point } from "../matrix/mod.ts";
 import { Cell } from "../cell.ts";
 
 export const ERR_NOT_IN_TRANSITION =

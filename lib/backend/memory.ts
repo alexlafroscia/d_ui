@@ -1,6 +1,6 @@
 import { Backend } from "./mod.ts";
 import { Cell } from "../cell.ts";
-import { Matrix } from "../matrix.ts";
+import { Matrix } from "../matrix/mod.ts";
 
 export class MemoryBackend extends Backend {
   height: number;
