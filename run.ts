@@ -1,8 +1,5 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
-import { detectTerminalEvents } from "./lib/events.ts";
-import { Fill } from "./lib/view/partition.ts";
-import { Screen } from "./lib/screen.ts";
-import { Text } from "./lib/widgets/text.ts";
+import { detectTerminalEvents, Fill, Screen, Text } from "./lib/mod.ts";
 
 await log.setup({
   handlers: {

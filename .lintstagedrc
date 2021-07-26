@@ -1,3 +1,4 @@
 {
+  "*.md": ["deno fmt"],
   "*.ts": ["deno fmt", "deno lint"]
 }

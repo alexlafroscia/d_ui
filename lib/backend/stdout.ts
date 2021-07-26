@@ -16,7 +16,7 @@ export class StdoutBackend extends WriterBackend {
   constructor(
     outputStream: Deno.Writer,
     { rows, columns }: ConsoleSize,
-    terminalRid: number | null = Deno.stdout.rid,
+    terminalRid: number | null,
     privateSymbol: symbol,
   ) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
@@ -39,7 +39,7 @@ export class StdoutBackend extends WriterBackend {
   static async create(
     outputStream: Deno.Writer = Deno.stdout,
     consoleSize: ConsoleSize = Deno.consoleSize(Deno.stdout.rid),
-    terminalRid: number | null,
+    terminalRid: number | null = Deno.stdout.rid,
   ) {
     const instance = new StdoutBackend(
       outputStream,
