@@ -15,11 +15,7 @@ export async function* eventStream(
   }
 
   try {
-    for await (
-      const chunk of iter(inputStream, {
-        bufSize: 1, // Used in the Terminal package; probably good to match them?
-      })
-    ) {
+    for await (const chunk of iter(inputStream, { bufSize: 1 })) {
       const [code] = chunk;
 
       // Entered code is outside of ASCII; not something supported yet
