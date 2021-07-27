@@ -1,21 +1,5 @@
-import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
-import { eventStream, Fill, Screen, Text } from "./lib/mod.ts";
-
-await log.setup({
-  handlers: {
-    file: new log.handlers.FileHandler("DEBUG", {
-      filename: "./log.txt",
-      formatter: "{levelName} {msg}",
-    }),
-  },
-
-  loggers: {
-    default: {
-      level: "DEBUG",
-      handlers: ["file"],
-    },
-  },
-});
+import { eventStream, Fill, Screen, Text } from "../lib/mod.ts";
+import "./setup-log.ts";
 
 let screen;
 
