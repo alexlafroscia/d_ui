@@ -1,5 +1,5 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
-import { detectTerminalEvents, Fill, Screen, Text } from "./lib/mod.ts";
+import { eventStream, Fill, Screen, Text } from "./lib/mod.ts";
 
 await log.setup({
   handlers: {
@@ -48,12 +48,25 @@ try {
   });
 
   let buffer = "";
-  for await (const event of detectTerminalEvents(Deno.stdin)) {
-    // Handle next event
+
+  events:
+  for await (const event of eventStream(Deno.stdin)) {
     switch (event.type) {
-      case "KEYBOARD":
-        // @ts-ignore translate key to string
-        buffer += event.key as string;
+      // Add printable characters to the buffer
+      case "PrintableInputEvent":
+        buffer += event.key;
+        break;
+
+      // Handle control characters
+
+      case "ControlInputEvent":
+        switch (event.key) {
+          // CTRL-C
+          case "ETX":
+            break events;
+          default:
+            break;
+        }
         break;
       default:
         break;
