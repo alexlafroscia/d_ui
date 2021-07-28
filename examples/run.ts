@@ -1,6 +1,8 @@
 import { eventStream, Fill, Screen, Text } from "../lib/mod.ts";
 import "./setup-log.ts";
 
+const INTRO_TEXT = "Hello! This text is pretty long, to show off wrapping";
+
 let screen;
 
 try {
@@ -18,7 +20,7 @@ try {
   await screen.transaction(() => {
     // Write line numbers to screen
     lineNumbers.render({
-      render(view, write) {
+      draw(view, write) {
         for (let i = 0; i < view.height; i++) {
           write({ x: 0, y: i }, i.toString().padStart(2, "0"));
         }
@@ -28,7 +30,7 @@ try {
     header.render(new Text("x".repeat(header.width)));
     footer.render(new Text("x".repeat(footer.width)));
 
-    left.render(new Text("Type"));
+    left.render(new Text(INTRO_TEXT, { wrap: true }));
   });
 
   let buffer = "";

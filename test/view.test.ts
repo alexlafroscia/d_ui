@@ -41,7 +41,7 @@ Deno.test("writing to a view", () => {
   const { matrix, view } = createView();
 
   view.render({
-    render(view, write) {
+    draw(view, write) {
       for (let x = 0; x < view.width; x++) {
         for (let y = 0; y < view.height; y++) {
           write({ x, y }, "x");
@@ -59,7 +59,7 @@ Deno.test("writing to a view", () => {
   const [left, right] = view.verticalSplit(0.5, 0.5);
 
   left.render({
-    render(view, write) {
+    draw(view, write) {
       for (let x = 0; x < view.width; x++) {
         for (let y = 0; y < view.height; y++) {
           write({ x, y }, "l");
@@ -69,7 +69,7 @@ Deno.test("writing to a view", () => {
   });
 
   right.render({
-    render(view, write) {
+    draw(view, write) {
       for (let x = 0; x < view.width; x++) {
         for (let y = 0; y < view.height; y++) {
           write({ x, y }, "r");
@@ -87,7 +87,7 @@ Deno.test("writing to a view", () => {
   const [top, bottom] = view.horizontalSplit(0.5, 0.5);
 
   top.render({
-    render(view, write) {
+    draw(view, write) {
       for (let x = 0; x < view.width; x++) {
         for (let y = 0; y < view.height; y++) {
           write({ x, y }, "t");
@@ -97,7 +97,7 @@ Deno.test("writing to a view", () => {
   });
 
   bottom.render({
-    render(view, write) {
+    draw(view, write) {
       for (let x = 0; x < view.width; x++) {
         for (let y = 0; y < view.height; y++) {
           write({ x, y }, "b");

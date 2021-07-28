@@ -102,7 +102,7 @@ export class View {
   }
 
   render(widget: Widget) {
-    widget.render(this, (point, content) => {
+    widget.draw(this, (point, content) => {
       const cell = typeof content === "string"
         ? new Cell(content, Colors.WHITE)
         : content;

@@ -5,6 +5,6 @@ export interface View {
   width: number;
 }
 
-export interface Widget {
-  render(view: View, write: WriteToScreen): void;
+export abstract class Widget {
+  abstract draw(view: View, write: WriteToScreen): void;
 }
