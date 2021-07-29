@@ -3,17 +3,20 @@ import { Cell } from "../cell.ts";
 import { Matrix } from "../matrix/mod.ts";
 
 export class MemoryBackend extends Backend {
-  height: number;
-  width: number;
-
   private matrix: Matrix<Cell>;
 
   constructor(height: number, width: number) {
     super();
 
     this.matrix = new Matrix(height, width, new Cell(" "));
-    this.height = height;
-    this.width = width;
+  }
+
+  get height() {
+    return this.matrix.height;
+  }
+
+  get width() {
+    return this.matrix.width;
   }
 
   get(x: number, y: number): Cell {
