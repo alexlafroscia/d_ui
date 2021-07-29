@@ -1,4 +1,5 @@
-import { eventStream, Fill, Screen, Text } from "../lib/mod.ts";
+import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
+import { eventStream, Fill, Input, Screen, Text } from "../lib/mod.ts";
 import "./setup-log.ts";
 
 const INTRO_TEXT = "Hello! This text is pretty long, to show off wrapping";
@@ -33,36 +34,21 @@ try {
     left.render(new Text(INTRO_TEXT, { wrap: true }));
   });
 
-  let buffer = "";
+  const input = new Input(right);
 
-  events:
   for await (const event of eventStream(Deno.stdin)) {
-    switch (event.type) {
-      // Add printable characters to the buffer
-      case "PrintableInputEvent":
-        buffer += event.key;
-        break;
+    log.debug(event);
 
-      // Handle control characters
-
-      case "ControlInputEvent":
-        switch (event.key) {
-          // CTRL-C
-          case "ETX":
-            break events;
-          default:
-            break;
-        }
-        break;
-      default:
-        break;
+    // Stop the event loop if the user hits `CTL-C`
+    if (event.type === "ControlInputEvent" && event.key === "ETX") {
+      break;
     }
+
+    input.handleEvent(event);
 
     // Re-render
     await screen.transaction(() => {
-      const text = new Text(buffer);
-
-      right.render(text);
+      right.render(input);
     });
   }
 } finally {
