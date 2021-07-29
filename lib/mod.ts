@@ -1,6 +1,6 @@
 // Rendering
 export { Screen } from "./screen.ts";
-export { Fill, Relative } from "./view/partition.ts";
+export { Fill, Relative, View } from "./view/mod.ts";
 
 // Event handling
 export * from "./events/mod.ts";

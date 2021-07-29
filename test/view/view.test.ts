@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { Cell } from "../lib/cell.ts";
-import { View } from "../lib/view.ts";
-import { Matrix } from "../lib/matrix/mod.ts";
+import { Cell } from "../../lib/cell.ts";
+import { View } from "../../lib/view/mod.ts";
+import { Matrix } from "../../lib/matrix/mod.ts";
 
 function createView() {
   const matrix = new Matrix(8, 8, new Cell(" "));
