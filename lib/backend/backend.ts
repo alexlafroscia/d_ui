@@ -33,5 +33,5 @@ export abstract class Backend {
     this.isTransitioning = false;
   }
 
-  async cleanup() {}
+  cleanup?(): Promise<void>;
 }

@@ -49,6 +49,6 @@ export class Screen extends View {
    * Restore `STDOUT` to normal working order
    */
   async cleanup() {
-    await this.backend.cleanup();
+    await this.backend.cleanup?.();
   }
 }
