@@ -2,7 +2,7 @@ import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import {
   assertSpyCall,
   Spy,
-  spy,
+  stub,
 } from "https://deno.land/x/mock@v0.10.0/mod.ts";
 import { StringReader } from "https://deno.land/std@0.103.0/io/mod.ts";
 import { eventStream } from "../../lib/events/mod.ts";
@@ -24,7 +24,7 @@ Deno.test("reading printable characters from the input stream", async () => {
 
 Deno.test('setting "raw mode" on the input stream', async () => {
   // Stub the `setRaw` API
-  const setRaw: Spy<typeof Deno> = spy(Deno, "setRaw");
+  const setRaw: Spy<typeof Deno> = stub(Deno, "setRaw");
 
   const input = new StringReader("a");
   // @ts-ignore mocking an input that does have this property
