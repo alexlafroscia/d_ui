@@ -9,7 +9,7 @@ import {
   Fill,
   partition,
   Relative,
-} from "../../lib/view/partition.ts";
+} from "../../../lib/view/split/partition.ts";
 
 Deno.test("splitting values", () => {
   assertEquals(

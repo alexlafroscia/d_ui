@@ -1,5 +1,13 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
-import { eventStream, Fill, Input, Screen, Text } from "../lib/mod.ts";
+import {
+  Column,
+  eventStream,
+  Fill,
+  Input,
+  Row,
+  Screen,
+  Text,
+} from "../lib/mod.ts";
 import "./setup-log.ts";
 
 const INTRO_TEXT = "Hello! This text is pretty long, to show off wrapping";
@@ -8,15 +16,15 @@ let screen;
 
 try {
   screen = await Screen.create();
-  const [lineNumbers, _lineSpacer, rest] = screen.verticalSplit(2, 1, Fill);
+  const [lineNumbers, _lineSpacer, rest] = Row.create(screen, 2, 1, Fill);
   const [
     header,
     _headerSpacer,
     content,
     _footerSpacer,
     footer,
-  ] = rest.horizontalSplit(1, 1, Fill, 1, 1);
-  const [left, right] = content.verticalSplit(0.125, Fill);
+  ] = Column.create(rest, 1, 1, Fill, 1, 1);
+  const [left, right] = Row.create(content, 0.125, Fill);
 
   await screen.transaction(() => {
     // Write line numbers to screen

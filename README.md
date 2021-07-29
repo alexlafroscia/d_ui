@@ -8,13 +8,14 @@ until a `1.0.0` release is made.
 ## Usage
 
 ```typescript
-const { Screen, Text, Relative, Fill } from 'xxx/dui/lib/mod.ts';
+const { Screen, Row, Relative, Fill, Text } from 'xxx/dui/lib/mod.ts';
 
 // Create a `Screen` instance to get started
 const screen = await Screen.create();
 
 // The `Screen` can be written to directly, or sub-divided into parts
-const [left, center, right] = screen.verticalSplit(
+const [left, center, right] = Row.create(
+  screen,
   // Exact pixel width
   10,
   // Percentage-based width
