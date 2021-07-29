@@ -1,0 +1,12 @@
+{
+  // Enable `deno` tooling
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": true,
+  "deno.codeLens.testArgs": [
+    "--allow-all"
+  ],
+
+  // Turn off the `tsserver` integration
+  "typescript.validate.enable": false
+}
