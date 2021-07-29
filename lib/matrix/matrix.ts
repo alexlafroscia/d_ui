@@ -6,13 +6,13 @@ export class Matrix<T> extends MatrixLike<T> {
 
   onUpdate?: (point: Point, value: T) => void;
 
-  constructor(numberOfRows: number, numberOfColumns: number, fallbackValue: T) {
+  constructor(height: number, width: number, fallbackValue: T) {
     super();
 
-    this.rows = new Array(numberOfRows);
+    this.rows = new Array(height);
 
-    for (let i = 0; i < numberOfRows; i++) {
-      this.rows[i] = new Array(numberOfColumns);
+    for (let i = 0; i < height; i++) {
+      this.rows[i] = new Array(width);
       this.rows[i].fill(fallbackValue);
     }
   }
