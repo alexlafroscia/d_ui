@@ -4,6 +4,7 @@ import {
   eventStream,
   Fill,
   Input,
+  Inset,
   Row,
   Screen,
   Text,
@@ -16,15 +17,17 @@ let screen;
 
 try {
   screen = await Screen.create();
-  const [lineNumbers, _lineSpacer, rest] = Row.create(screen, 2, 1, Fill);
+  const [lineNumbers, rest] = Row.create(screen, 2, Fill);
   const [
     header,
-    _headerSpacer,
     content,
-    _footerSpacer,
     footer,
-  ] = Column.create(rest, 1, 1, Fill, 1, 1);
-  const [left, right] = Row.create(content, 0.125, Fill);
+  ] = Column.create(new Inset(rest, { left: 1 }), 1, Fill, 1);
+  const [left, right] = Row.create(
+    new Inset(content, { right: 1, left: 1 }),
+    0.125,
+    Fill,
+  );
 
   await screen.transaction(() => {
     // Write line numbers to screen

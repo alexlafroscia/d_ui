@@ -1,4 +1,5 @@
 // Rendering
+export { Cell } from "./cell.ts";
 export { Screen } from "./screen.ts";
 export * from "./view/mod.ts";
 

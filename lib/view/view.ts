@@ -4,7 +4,11 @@ import { MatrixLike } from "../matrix/mod.ts";
 import { Widget } from "../widgets/mod.ts";
 
 export class View {
-  constructor(protected matrix: MatrixLike<Cell>) {
+  matrix: MatrixLike<Cell>;
+
+  constructor(matrix: MatrixLike<Cell>) {
+    this.matrix = matrix;
+
     log.debug(
       `Initializing View with width: ${this.width}, height ${this.height}`,
     );
