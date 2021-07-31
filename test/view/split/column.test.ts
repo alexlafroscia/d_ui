@@ -1,18 +1,5 @@
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std/testing/asserts.ts";
-import { Cell } from "../../../lib/cell.ts";
-import { View } from "../../../lib/view/mod.ts";
+import { assertEquals, assertThrows, createView } from "../../helpers.ts";
 import { Column } from "../../../lib/view/split/column.ts";
-import { Matrix } from "../../../lib/matrix/mod.ts";
-
-function createView() {
-  const matrix = new Matrix(8, 8, new Cell(" "));
-  const view = new View(matrix);
-
-  return { matrix, view };
-}
 
 Deno.test("cannot instantiate a Column with the constructor", () => {
   const { view } = createView();

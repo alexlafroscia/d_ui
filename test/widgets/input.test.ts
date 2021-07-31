@@ -1,9 +1,4 @@
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  Spy,
-  spy,
-} from "https://deno.land/x/mock@v0.10.0/mod.ts";
+import { assertSpyCall, assertSpyCalls, Spy, spy } from "../helpers.ts";
 import { Input as InputWidget } from "../../lib/widgets/input.ts";
 
 Deno.test("handling printable input events", () => {

@@ -1,9 +1,4 @@
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import {
-  assertSpyCall,
-  Spy,
-  stub,
-} from "https://deno.land/x/mock@v0.10.0/mod.ts";
+import { assertEquals, assertSpyCall, Spy, stub } from "../helpers.ts";
 import { StringReader } from "https://deno.land/std@0.103.0/io/mod.ts";
 import { eventStream } from "../../lib/events/mod.ts";
 

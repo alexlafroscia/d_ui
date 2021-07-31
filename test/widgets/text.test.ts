@@ -1,9 +1,4 @@
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  Spy,
-  spy,
-} from "https://deno.land/x/mock@v0.10.0/mod.ts";
+import { assertSpyCall, assertSpyCalls, Spy, spy } from "../helpers.ts";
 import { Text as TextWidget } from "../../lib/widgets/text.ts";
 
 Deno.test("writing a string without wrapping", () => {

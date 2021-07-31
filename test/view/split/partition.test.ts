@@ -1,7 +1,4 @@
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std/testing/asserts.ts";
+import { assertEquals, assertThrows } from "../../helpers.ts";
 import {
   ERR_NEGATIVE_SPLIT_SIZE,
   ERR_TOO_LARGE,

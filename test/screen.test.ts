@@ -1,7 +1,4 @@
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std/testing/asserts.ts";
+import { assertEquals, assertThrows } from "./helpers.ts";
 import { ERR_NOT_IN_TRANSITION, MemoryBackend } from "../lib/backend/mod.ts";
 import { Text } from "../lib/widgets/text.ts";
 import { Screen } from "../lib/screen.ts";
