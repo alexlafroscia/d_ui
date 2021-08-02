@@ -1,11 +1,9 @@
 import { Cell } from "./cell.ts";
-import { Matrix, Point } from "./matrix/mod.ts";
+import { Matrix } from "./matrix/mod.ts";
 import { View } from "./view/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
-
-export type WriteToScreen = (point: Point, content: Cell | string) => void;
 
 export class Screen extends View {
   private backend: Backend;

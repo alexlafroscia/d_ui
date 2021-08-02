@@ -1,4 +1,7 @@
-import { WriteToScreen } from "../screen.ts";
+import { Point } from "../matrix/point.ts";
+import { Cell } from "../cell.ts";
+
+export type WriteToScreen = (point: Point, content: Cell | string) => void;
 
 export interface View {
   height: number;

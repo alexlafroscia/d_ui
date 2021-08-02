@@ -1,5 +1,4 @@
-import { View, Widget } from "./widget.ts";
-import { WriteToScreen } from "../screen.ts";
+import { View, Widget, WriteToScreen } from "./widget.ts";
 
 interface TextWidgetConfig {
   wrap?: boolean;

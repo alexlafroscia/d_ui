@@ -1,6 +1,5 @@
-import { View, Widget } from "./widget.ts";
+import { View, Widget, WriteToScreen } from "./widget.ts";
 import { Matrix, Point } from "../matrix/mod.ts";
-import { WriteToScreen } from "../screen.ts";
 import { Event } from "../events/event.ts";
 
 // Empty cells that do not need to be written to
