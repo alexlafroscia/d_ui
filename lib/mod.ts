@@ -9,3 +9,4 @@ export * from "./events/mod.ts";
 // Widgets
 export { Text } from "./widgets/text.ts";
 export { Input } from "./widgets/input.ts";
+export { List } from "./widgets/list.ts";

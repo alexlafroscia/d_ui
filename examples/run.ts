@@ -5,6 +5,7 @@ import {
   Fill,
   Input,
   Inset,
+  List,
   Row,
   Screen,
   Text,
@@ -28,6 +29,7 @@ try {
     0.125,
     Fill,
   );
+  const [topLeft, bottomLeft] = Column.create(left, 0.5, Fill);
 
   await screen.transaction(() => {
     // Write line numbers to screen
@@ -42,7 +44,14 @@ try {
     header.render(new Text("x".repeat(header.width)));
     footer.render(new Text("x".repeat(footer.width)));
 
-    left.render(new Text(INTRO_TEXT, { wrap: true }));
+    topLeft.render(new Text(INTRO_TEXT, { wrap: true }));
+    bottomLeft.render(
+      new List([
+        "first list item",
+        "second list item",
+        "third list item",
+      ], 1),
+    );
   });
 
   const input = new Input(right);
