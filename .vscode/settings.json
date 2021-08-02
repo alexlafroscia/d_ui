@@ -6,6 +6,8 @@
   "deno.codeLens.testArgs": [
     "--allow-all"
   ],
+  // Format-on-Save using Deno
+  "editor.defaultFormatter": "denoland.vscode-deno",
 
   // Turn off the `tsserver` integration
   "typescript.validate.enable": false
