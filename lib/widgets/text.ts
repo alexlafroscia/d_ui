@@ -1,4 +1,4 @@
-import { View, Widget } from "./mod.ts";
+import { View, Widget } from "./widget.ts";
 import { WriteToScreen } from "../screen.ts";
 
 interface TextWidgetConfig {

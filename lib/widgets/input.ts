@@ -1,4 +1,4 @@
-import { View, Widget } from "./mod.ts";
+import { View, Widget } from "./widget.ts";
 import { Matrix, Point } from "../matrix/mod.ts";
 import { WriteToScreen } from "../screen.ts";
 import { Event } from "../events/event.ts";

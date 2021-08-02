@@ -1,10 +1,4 @@
-import { WriteToScreen } from "../screen.ts";
-
-export interface View {
-  height: number;
-  width: number;
-}
-
-export abstract class Widget {
-  abstract draw(view: View, write: WriteToScreen): void;
-}
+export { Input } from "./input.ts";
+export { List } from "./list.ts";
+export { Text } from "./text.ts";
+export { Widget } from "./widget.ts";
