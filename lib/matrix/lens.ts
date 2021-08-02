@@ -12,12 +12,12 @@ export class Lens<T> extends MatrixLike<T> {
   /**
    * The point on the parent `Matrix` that represents the top-left corner of the `Lens`
    */
-  from: Point;
+  private from: Point;
 
   /**
    * The point on the parent `Matrix` that represents the bottom-right corner of the `Lens`
    */
-  to: Point;
+  private to: Point;
 
   constructor(parent: MatrixLike<T>, from: Point, to: Point) {
     super();

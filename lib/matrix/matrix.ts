@@ -17,14 +17,6 @@ export class Matrix<T> extends MatrixLike<T> {
     }
   }
 
-  get from() {
-    return { x: 0, y: 0 };
-  }
-
-  get to() {
-    return { x: this.width - 1, y: this.height - 1 };
-  }
-
   get height() {
     return this.rows.length;
   }

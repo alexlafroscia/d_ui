@@ -15,11 +15,11 @@ export class Inset extends View {
   ) {
     super(
       new Lens(parent.matrix, {
-        x: parent.matrix.from.x + left,
-        y: parent.matrix.from.y + top,
+        x: left,
+        y: top,
       }, {
-        x: parent.matrix.to.x - right,
-        y: parent.matrix.to.y - bottom,
+        x: parent.matrix.width - right - 1,
+        y: parent.matrix.height - bottom - 1,
       }),
     );
   }

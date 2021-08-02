@@ -1,13 +1,8 @@
-import { Point } from "./point.ts";
-
 function withinRange(value: number, min: number, max: number): boolean {
   return value >= min && value <= max;
 }
 
 export abstract class MatrixLike<T> {
-  abstract from: Point;
-  abstract to: Point;
-
   abstract height: number;
   abstract width: number;
 

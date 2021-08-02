@@ -14,10 +14,6 @@ export class View {
     );
   }
 
-  get origin() {
-    return this.matrix.from;
-  }
-
   get height() {
     return this.matrix.height;
   }

@@ -19,7 +19,10 @@ Deno.test("using a Lens to interact with a Matrix", () => {
 
 Deno.test("writing to the edges of a Matrix through a Lens", () => {
   const matrix = new Matrix(4, 4, false);
-  const lens = new Lens(matrix, matrix.from, matrix.to);
+  const lens = new Lens(matrix, { x: 0, y: 0 }, {
+    x: matrix.width - 1,
+    y: matrix.height - 1,
+  });
 
   for (let x = 0; x < lens.width; x++) {
     for (let y = 0; y < lens.height; y++) {
