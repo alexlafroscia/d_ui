@@ -1,6 +1,7 @@
 import { assertEquals, Spy, spy } from "../helpers.ts";
 import { List } from "../../lib/widgets/list.ts";
-import { Cell, Colors } from "../../lib/cell.ts";
+import { Cell } from "../../lib/cell.ts";
+import { Colors } from "../../lib/color/mod.ts";
 
 Deno.test("writing entries", () => {
   const list = new List(["first", "second"]);
@@ -28,7 +29,7 @@ Deno.test("rendering a selected entry", () => {
 
   assertEquals(write.calls, [
     ...[..."first"].map((char, index) => ({
-      args: [{ x: index, y: 0 }, new Cell(char, Colors.BLACK, Colors.BLUE)],
+      args: [{ x: index, y: 0 }, new Cell(char, Colors.Black, Colors.Blue)],
       returned: undefined,
     })),
   ]);

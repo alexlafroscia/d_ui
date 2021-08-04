@@ -1,5 +1,6 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
-import { Cell, Colors } from "../cell.ts";
+import { Cell } from "../cell.ts";
+import { Colors } from "../color/mod.ts";
 import { MatrixLike } from "../matrix/mod.ts";
 import { Widget } from "../widgets/mod.ts";
 
@@ -25,7 +26,7 @@ export class View {
   render(widget: Widget) {
     widget.draw(this, (point, content) => {
       const cell = typeof content === "string"
-        ? new Cell(content, Colors.WHITE)
+        ? new Cell(content, Colors.White)
         : content;
 
       this.matrix.set(point.x, point.y, cell);

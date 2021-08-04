@@ -1,7 +1,4 @@
-import {
-  Color,
-  Colors,
-} from "https://deno.land/x/terminal@0.1.0-dev.3/src/color.ts";
+import { Color } from "./color/mod.ts";
 
 export class Cell {
   content: string;
@@ -15,5 +12,3 @@ export class Cell {
     this.background = background;
   }
 }
-
-export { Colors };

@@ -1,9 +1,10 @@
 import { View, Widget, WriteToScreen } from "./widget.ts";
-import { Cell, Colors } from "../cell.ts";
+import { Colors } from "../color/mod.ts";
+import { Cell } from "../cell.ts";
 
 function makeCell(value: string, selected: boolean): Cell {
   return selected
-    ? new Cell(value, Colors.BLACK, Colors.BLUE)
+    ? new Cell(value, Colors.Black, Colors.Blue)
     : new Cell(value);
 }
 

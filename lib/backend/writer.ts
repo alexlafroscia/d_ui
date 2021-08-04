@@ -11,13 +11,11 @@ function toBufferSegment(cell: Cell, x: number, y: number) {
   let buffer = "";
 
   if (cell.foreground) {
-    buffer +=
-      `${ESC}[38;2;${cell.foreground.r};${cell.foreground.g};${cell.foreground.b}m`;
+    buffer += `${ESC}[${cell.foreground.toForegroundEscapeSequence()}m`;
   }
 
   if (cell.background) {
-    buffer +=
-      `${ESC}[48;2;${cell.background.r};${cell.background.g};${cell.background.b}m`;
+    buffer += `${ESC}[${cell.background.toBackgroundEscapeSequence()}m`;
   }
 
   buffer += `${ESC}[${y + 1};${x + 1}H${cell.content}`;

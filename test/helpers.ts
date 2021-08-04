@@ -10,6 +10,7 @@ export function createView() {
 }
 
 export {
+  assert,
   assertEquals,
   assertThrows,
   assertThrowsAsync,
