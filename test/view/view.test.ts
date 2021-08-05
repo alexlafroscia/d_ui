@@ -7,7 +7,7 @@ Deno.test("creating a view", () => {
   assertEquals(view.height, 8);
 });
 
-Deno.test("writing to a view", () => {
+Deno.test("writing a cell to a view", () => {
   const { matrix, view } = createView();
 
   view.render({
@@ -25,4 +25,26 @@ Deno.test("writing to a view", () => {
       assertEquals(matrix.get(x, y).content, "x");
     }
   }
+});
+
+Deno.test("writing a row to a view", () => {
+  const { matrix, view } = createView(1, 2);
+
+  view.render({
+    draw({ renderRow }) {
+      renderRow(0, "x");
+    },
+  });
+
+  assertEquals(matrix.get(0, 0).content, "x");
+  assertEquals(matrix.get(1, 0).content, " ");
+
+  view.render({
+    draw({ renderRow }) {
+      renderRow(0, "xx");
+    },
+  });
+
+  assertEquals(matrix.get(0, 0).content, "x");
+  assertEquals(matrix.get(1, 0).content, "x");
 });
