@@ -11,7 +11,7 @@ until a `1.0.0` release is made.
 ## Usage
 
 ```typescript
-const { Screen, Row, Relative, Fill, Text } from 'xxx/dui/lib/mod.ts';
+const { Screen, Row, Relative, Fill, Text } from 'https://deno.land/x/d_ui/mod.ts';
 
 // Create a `Screen` instance to get started
 const screen = await Screen.create();
