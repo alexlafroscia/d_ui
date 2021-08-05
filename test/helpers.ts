@@ -1,4 +1,4 @@
-import { Cell } from "../lib/cell.ts";
+import { Cell } from "../lib/renderable/mod.ts";
 import { View } from "../lib/view/mod.ts";
 import { Matrix } from "../lib/matrix/mod.ts";
 

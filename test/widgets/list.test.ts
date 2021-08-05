@@ -1,6 +1,6 @@
 import { assertEquals, Spy, spy } from "../helpers.ts";
 import { List } from "../../lib/widgets/list.ts";
-import { Cell } from "../../lib/cell.ts";
+import { Cell } from "../../lib/renderable/mod.ts";
 import { Colors } from "../../lib/color/mod.ts";
 
 Deno.test("writing entries", () => {

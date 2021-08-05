@@ -1,5 +1,5 @@
 import { Point } from "../matrix/point.ts";
-import { Cell } from "../cell.ts";
+import { Cell } from "../renderable/cell.ts";
 
 export interface DrawApi {
   height: number;

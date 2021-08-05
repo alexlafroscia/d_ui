@@ -1,6 +1,6 @@
 import { DrawApi, Widget } from "./widget.ts";
 import { Colors } from "../color/mod.ts";
-import { Cell } from "../cell.ts";
+import { Cell } from "../renderable/mod.ts";
 
 function makeCell(value: string, selected: boolean): Cell {
   return selected

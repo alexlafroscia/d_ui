@@ -1,4 +1,4 @@
-import { Color } from "./color/mod.ts";
+import { Color } from "../color/mod.ts";
 
 export class Cell {
   content: string;

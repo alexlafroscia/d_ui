@@ -1,5 +1,5 @@
 import { Backend } from "./mod.ts";
-import { Cell } from "../cell.ts";
+import { Cell } from "../renderable/mod.ts";
 import { Matrix } from "../matrix/mod.ts";
 
 export class MemoryBackend extends Backend {

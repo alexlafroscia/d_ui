@@ -1,4 +1,4 @@
-import { Cell } from "./cell.ts";
+import { Cell } from "./renderable/cell.ts";
 import { Matrix } from "./matrix/mod.ts";
 import { View } from "./view/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";

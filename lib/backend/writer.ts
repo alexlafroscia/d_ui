@@ -2,7 +2,7 @@ import * as EscapeSequence from "https://deno.land/x/terminal@0.1.0-dev.3/src/es
 import { reduce } from "https://deno.land/x/iter@v2.3.0/mod.ts";
 import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util.ts";
 
-import { Cell } from "../cell.ts";
+import { Cell } from "../renderable/mod.ts";
 import { Backend } from "./mod.ts";
 
 const ESC = EscapeSequence.ESC;

@@ -1,5 +1,5 @@
 import { Point } from "../matrix/mod.ts";
-import { Cell } from "../cell.ts";
+import { Cell } from "../renderable/mod.ts";
 
 export const ERR_NOT_IN_TRANSITION =
   "Writing can only occur during a transition";

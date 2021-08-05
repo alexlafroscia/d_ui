@@ -1,5 +1,5 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
-import { Cell } from "../cell.ts";
+import { Cell } from "../renderable/mod.ts";
 import { Colors } from "../color/mod.ts";
 import { MatrixLike } from "../matrix/mod.ts";
 import { Widget } from "../widgets/mod.ts";
