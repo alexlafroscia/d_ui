@@ -22,20 +22,20 @@ Deno.test("creating a row from a view", () => {
   assertEquals(right.height, 8, "The right split has the correct height");
 
   left.render({
-    draw(view, write) {
-      for (let x = 0; x < view.width; x++) {
-        for (let y = 0; y < view.height; y++) {
-          write({ x, y }, "l");
+    draw({ height, width, renderCell }) {
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+          renderCell({ x, y }, "l");
         }
       }
     },
   });
 
   right.render({
-    draw(view, write) {
-      for (let x = 0; x < view.width; x++) {
-        for (let y = 0; y < view.height; y++) {
-          write({ x, y }, "r");
+    draw({ height, width, renderCell }) {
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+          renderCell({ x, y }, "r");
         }
       }
     },

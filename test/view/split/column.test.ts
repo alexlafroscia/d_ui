@@ -17,20 +17,20 @@ Deno.test("creating a column from a view", () => {
   const [top, bottom] = Column.create(view, 0.5, 0.5);
 
   top.render({
-    draw(view, write) {
-      for (let x = 0; x < view.width; x++) {
-        for (let y = 0; y < view.height; y++) {
-          write({ x, y }, "t");
+    draw({ height, width, renderCell }) {
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+          renderCell({ x, y }, "t");
         }
       }
     },
   });
 
   bottom.render({
-    draw(view, write) {
-      for (let x = 0; x < view.width; x++) {
-        for (let y = 0; y < view.height; y++) {
-          write({ x, y }, "b");
+    draw({ height, width, renderCell }) {
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+          renderCell({ x, y }, "b");
         }
       }
     },

@@ -24,12 +24,16 @@ export class View {
   }
 
   render(widget: Widget) {
-    widget.draw(this, (point, content) => {
-      const cell = typeof content === "string"
-        ? new Cell(content, Colors.White)
-        : content;
+    widget.draw({
+      height: this.height,
+      width: this.width,
+      renderCell: (point, content) => {
+        const cell = typeof content === "string"
+          ? new Cell(content, Colors.White)
+          : content;
 
-      this.matrix.set(point.x, point.y, cell);
+        this.matrix.set(point.x, point.y, cell);
+      },
     });
   }
 }

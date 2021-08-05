@@ -1,4 +1,4 @@
-import { View, Widget, WriteToScreen } from "./widget.ts";
+import { DrawApi, Widget } from "./widget.ts";
 import { Matrix, Point } from "../matrix/mod.ts";
 import { Event } from "../events/event.ts";
 
@@ -10,7 +10,7 @@ const REPLACE = Symbol("Replace Cell");
 
 type Cell = string | typeof EMPTY | typeof REPLACE;
 
-export class Input extends Widget {
+export class Input implements Widget {
   /**
    * Keep track of what should be written into the view next time
    */
@@ -21,9 +21,7 @@ export class Input extends Widget {
    */
   private cursorPosition: Point = { x: 0, y: 0 };
 
-  constructor(view: View) {
-    super();
-
+  constructor(view: { height: number; width: number }) {
     this.buffer = new Matrix<Cell>(view.height, view.width, EMPTY);
   }
 
@@ -82,16 +80,16 @@ export class Input extends Widget {
     }
   }
 
-  draw(view: View, write: WriteToScreen) {
-    for (let y = 0; y < view.height; y++) {
-      for (let x = 0; x < view.width; x++) {
+  draw({ height, width, renderCell }: DrawApi) {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
         const value = this.buffer.get(x, y);
 
         // If the value is the `REPLACE` sigil, we need to:
         // 1. Write an empty space to this location
         // 2. Update our data store, to avoid re-writing this location in the future
         if (value === REPLACE) {
-          write({ x, y }, " ");
+          renderCell({ x, y }, " ");
           this.buffer.set(x, y, EMPTY);
           continue;
         }
@@ -101,7 +99,7 @@ export class Input extends Widget {
           break;
         }
 
-        write({ x, y }, value);
+        renderCell({ x, y }, value);
       }
     }
   }

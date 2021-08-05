@@ -6,10 +6,10 @@ Deno.test("creating an Inset", () => {
   const inset = new Inset(view, { top: 1, bottom: 1, left: 1, right: 1 });
 
   inset.render({
-    draw(view, write) {
-      for (let x = 0; x < view.width; x++) {
-        for (let y = 0; y < view.height; y++) {
-          write({ x, y }, "x");
+    draw({ height, width, renderCell }) {
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+          renderCell({ x, y }, "x");
         }
       }
     },

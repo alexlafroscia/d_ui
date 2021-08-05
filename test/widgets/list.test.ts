@@ -5,11 +5,11 @@ import { Colors } from "../../lib/color/mod.ts";
 
 Deno.test("writing entries", () => {
   const list = new List(["first", "second"]);
-  const write: Spy<void> = spy();
+  const renderCell: Spy<void> = spy();
 
-  list.draw({ height: 3, width: 10 }, write);
+  list.draw({ height: 3, width: 10, renderCell });
 
-  assertEquals(write.calls, [
+  assertEquals(renderCell.calls, [
     ...[..."first".padEnd(10, " ")].map((char, index) => ({
       args: [{ x: index, y: 0 }, new Cell(char)],
       returned: undefined,
@@ -23,11 +23,11 @@ Deno.test("writing entries", () => {
 
 Deno.test("rendering a selected entry", () => {
   const list = new List(["first"], 0);
-  const write: Spy<void> = spy();
+  const renderCell: Spy<void> = spy();
 
-  list.draw({ height: 3, width: 10 }, write);
+  list.draw({ height: 3, width: 10, renderCell });
 
-  assertEquals(write.calls, [
+  assertEquals(renderCell.calls, [
     ...[..."first".padEnd(10, " ")].map((char, index) => ({
       args: [{ x: index, y: 0 }, new Cell(char, Colors.Black, Colors.Blue)],
       returned: undefined,

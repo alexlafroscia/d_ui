@@ -1,13 +1,11 @@
 import { Point } from "../matrix/point.ts";
 import { Cell } from "../cell.ts";
 
-export type WriteToScreen = (point: Point, content: Cell | string) => void;
-
-export interface View {
+export interface DrawApi {
   height: number;
   width: number;
+  renderCell(point: Point, content: Cell | string): void;
 }
-
-export abstract class Widget {
-  abstract draw(view: View, write: WriteToScreen): void;
+export interface Widget {
+  draw(api: DrawApi): void;
 }

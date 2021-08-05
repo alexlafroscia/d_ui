@@ -34,9 +34,9 @@ try {
   await screen.transaction(() => {
     // Write line numbers to screen
     lineNumbers.render({
-      draw(view, write) {
-        for (let i = 0; i < view.height; i++) {
-          write({ x: 0, y: i }, i.toString().padStart(2, "0"));
+      draw({ height, renderCell }) {
+        for (let i = 0; i < height; i++) {
+          renderCell({ x: 0, y: i }, i.toString().padStart(2, "0"));
         }
       },
     });
