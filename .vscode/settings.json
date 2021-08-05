@@ -6,6 +6,9 @@
   "deno.codeLens.testArgs": [
     "--allow-all"
   ],
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true
+  },
   // Format-on-Save using Deno
   "editor.defaultFormatter": "denoland.vscode-deno",
 
