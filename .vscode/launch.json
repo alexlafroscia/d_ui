@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Deno",
+      "name": "Attach to Breakpoint",
       "type": "node",
       "request": "attach",
       "port": 9229,
