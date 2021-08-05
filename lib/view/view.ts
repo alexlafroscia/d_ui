@@ -1,10 +1,10 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import { Cell } from "../renderable/mod.ts";
 import { Colors } from "../color/mod.ts";
-import { MatrixLike } from "../matrix/mod.ts";
-import { Widget } from "../widgets/mod.ts";
+import { MatrixLike, Point } from "../matrix/mod.ts";
+import { DrawApi, Widget } from "../widgets/mod.ts";
 
-export class View {
+export class View implements DrawApi {
   matrix: MatrixLike<Cell>;
 
   constructor(matrix: MatrixLike<Cell>) {
@@ -23,17 +23,19 @@ export class View {
     return this.matrix.width;
   }
 
+  renderCell(point: Point, content: Cell | string) {
+    const cell = typeof content === "string"
+      ? new Cell(content, Colors.White)
+      : content;
+
+    this.matrix.set(point.x, point.y, cell);
+  }
+
   render(widget: Widget) {
     widget.draw({
       height: this.height,
       width: this.width,
-      renderCell: (point, content) => {
-        const cell = typeof content === "string"
-          ? new Cell(content, Colors.White)
-          : content;
-
-        this.matrix.set(point.x, point.y, cell);
-      },
+      renderCell: this.renderCell.bind(this),
     });
   }
 }
