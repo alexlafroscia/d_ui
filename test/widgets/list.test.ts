@@ -10,11 +10,11 @@ Deno.test("writing entries", () => {
   list.draw({ height: 3, width: 10 }, write);
 
   assertEquals(write.calls, [
-    ...[..."first"].map((char, index) => ({
+    ...[..."first".padEnd(10, " ")].map((char, index) => ({
       args: [{ x: index, y: 0 }, new Cell(char)],
       returned: undefined,
     })),
-    ...[..."second"].map((char, index) => ({
+    ...[..."second".padEnd(10, " ")].map((char, index) => ({
       args: [{ x: index, y: 1 }, new Cell(char)],
       returned: undefined,
     })),
@@ -28,7 +28,7 @@ Deno.test("rendering a selected entry", () => {
   list.draw({ height: 3, width: 10 }, write);
 
   assertEquals(write.calls, [
-    ...[..."first"].map((char, index) => ({
+    ...[..."first".padEnd(10, " ")].map((char, index) => ({
       args: [{ x: index, y: 0 }, new Cell(char, Colors.Black, Colors.Blue)],
       returned: undefined,
     })),

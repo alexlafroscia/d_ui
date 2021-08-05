@@ -32,8 +32,10 @@ export class List extends Widget {
     for (let y = this.offset; y < numberToDraw; y++) {
       const entry = this.entries[y];
 
-      for (let x = 0; x < Math.min(entry.length, view.width); x++) {
-        write({ x, y }, makeCell(entry.charAt(x), this.selected === y));
+      for (let x = 0; x < view.width; x++) {
+        const char = entry.charAt(x) || " ";
+
+        write({ x, y }, makeCell(char, this.selected === y));
       }
     }
   }
