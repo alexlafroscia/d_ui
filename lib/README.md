@@ -1,5 +1,8 @@
 # dui
 
+[![CI](https://github.com/alexlafroscia/dui/actions/workflows/ci.yml/badge.svg)](https://github.com/alexlafroscia/dui/actions/workflows/ci.yml)
+[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/d_ui/mod.ts)
+
 > Terminal rendering for Deno
 
 **Note:** This is a major work-in-progress. API will change without warning
