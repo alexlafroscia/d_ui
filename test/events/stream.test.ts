@@ -1,5 +1,5 @@
 import { assertEquals, assertSpyCall, Spy, stub } from "../helpers.ts";
-import { StringReader } from "https://deno.land/std@0.103.0/io/mod.ts";
+import { StringReader } from "https://deno.land/std@0.104.0/io/mod.ts";
 import { eventStream } from "../../lib/events/mod.ts";
 
 async function take<T>(input: AsyncIterableIterator<T>): Promise<T> {
