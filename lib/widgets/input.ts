@@ -26,6 +26,14 @@ export class Input implements Widget, EventHandler {
     this.buffer = new Matrix<Cell>(view.height, view.width, EMPTY);
   }
 
+  clear() {
+    this.buffer = new Matrix<Cell>(
+      this.buffer.height,
+      this.buffer.width,
+      REPLACE,
+    );
+  }
+
   /**
    * @param event An input event
    * @returns Whether or not the event was used

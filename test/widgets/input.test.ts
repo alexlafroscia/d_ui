@@ -118,3 +118,25 @@ Deno.test('handling deletion ("DEL")', () => {
     self: view,
   });
 });
+
+Deno.test("clearing the input", () => {
+  const { view } = createView(1, 1);
+  const widget = new InputWidget(view);
+  const renderCell = stub(view, "renderCell");
+
+  widget.handleEvent({ type: "PrintableInputEvent", key: "a" });
+  view.render(widget);
+
+  assertSpyCall(renderCell, 0, {
+    args: [{ x: 0, y: 0 }, "a"],
+    self: view,
+  });
+
+  widget.clear();
+  view.render(widget);
+
+  assertSpyCall(renderCell, 1, {
+    args: [{ x: 0, y: 0 }, " "],
+    self: view,
+  });
+});
