@@ -1,8 +1,13 @@
-import { ControlCharacter } from "./ascii.ts";
+import { ControlCharacter as AsciiControlCharacter } from "./ascii.ts";
+import { ControlCharacter as AnsiControlCharacter } from "./ansi.ts";
+
+type ControlCharacter =
+  | keyof typeof AsciiControlCharacter
+  | keyof typeof AnsiControlCharacter;
 
 export type ControlInputEvent = {
   type: "ControlInputEvent";
-  key: keyof typeof ControlCharacter;
+  key: ControlCharacter;
 };
 
 export type PrintableInputEvent = {

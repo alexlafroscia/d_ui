@@ -1,4 +1,4 @@
-import { assertEquals, assertSpyCall, Spy, stub } from "../helpers.ts";
+import { assertSpyCall, Spy, stub } from "../helpers.ts";
 import { StringReader } from "https://deno.land/std@0.104.0/io/mod.ts";
 import { eventStream } from "../../lib/events/mod.ts";
 
@@ -7,15 +7,6 @@ async function take<T>(input: AsyncIterableIterator<T>): Promise<T> {
 
   return value;
 }
-
-Deno.test("reading printable characters from the input stream", async () => {
-  const input = "Hello World!";
-  const stream = eventStream(new StringReader(input));
-
-  for (const key of input) {
-    assertEquals(await take(stream), { type: "PrintableInputEvent", key });
-  }
-});
 
 Deno.test('setting "raw mode" on the input stream', async () => {
   // Stub the `setRaw` API
