@@ -1,4 +1,5 @@
 import { DrawApi, Widget } from "./widget.ts";
+import { EventHandler } from "./event-handler.ts";
 import { Matrix, Point } from "../matrix/mod.ts";
 import { Event } from "../events/event.ts";
 
@@ -10,7 +11,7 @@ const REPLACE = Symbol("Replace Cell");
 
 type Cell = string | typeof EMPTY | typeof REPLACE;
 
-export class Input implements Widget {
+export class Input implements Widget, EventHandler {
   /**
    * Keep track of what should be written into the view next time
    */
@@ -25,7 +26,11 @@ export class Input implements Widget {
     this.buffer = new Matrix<Cell>(view.height, view.width, EMPTY);
   }
 
-  handleEvent(event: Event) {
+  /**
+   * @param event An input event
+   * @returns Whether or not the event was used
+   */
+  handleEvent(event: Event): boolean {
     if (event.type === "PrintableInputEvent") {
       // Set the incoming character at the current position
       this.buffer.set(this.cursorPosition.x, this.cursorPosition.y, event.key);
@@ -38,13 +43,15 @@ export class Input implements Widget {
         this.cursorPosition.x = 0;
         this.cursorPosition.y++;
       }
+
+      return true;
     }
 
     if (event.type === "ControlInputEvent") {
       if (event.key === "DEL" || event.key === "BS") {
         // Do nothing if we're already at the very beginning of our prompt
         if (this.cursorPosition.x === 0 && this.cursorPosition.y === 0) {
-          return;
+          return false;
         }
         // Move the cursor "back"
         this.cursorPosition.x--;
@@ -71,13 +78,21 @@ export class Input implements Widget {
 
         // Set up this location to be replaced with blank space on the next draw
         this.buffer.set(this.cursorPosition.x, this.cursorPosition.y, REPLACE);
+
+        return true;
       }
 
       if (event.key === "CR") {
         this.cursorPosition.x = 0;
         this.cursorPosition.y++;
+
+        return true;
       }
+
+      return false;
     }
+
+    return false;
   }
 
   draw({ height, width, renderCell }: DrawApi) {

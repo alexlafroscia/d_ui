@@ -1,8 +1,10 @@
 import { DrawApi, Widget } from "./widget.ts";
+import { EventHandler } from "./event-handler.ts";
 import { Colors } from "../color/mod.ts";
 import { Row } from "../renderable/mod.ts";
+import { Event } from "../events/event.ts";
 
-export class List implements Widget {
+export class List implements Widget, EventHandler {
   protected selectedIndex: number | undefined = undefined;
   private offset = 0;
 
@@ -58,5 +60,21 @@ export class List implements Widget {
 
       renderRow(y, this.makeRow(entry, this.selectedIndex === y));
     }
+  }
+
+  handleEvent(event: Event): boolean {
+    if (event.type === "ControlInputEvent") {
+      if (event.key === "ArrowUp") {
+        this.selectPrevious();
+        return true;
+      }
+
+      if (event.key === "ArrowDown") {
+        this.selectNext();
+        return true;
+      }
+    }
+
+    return false;
   }
 }
