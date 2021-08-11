@@ -1,6 +1,7 @@
 import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import {
   Column,
+  createEventHandler,
   eventStream,
   Fill,
   Input,
@@ -31,6 +32,15 @@ try {
   );
   const [topLeft, bottomLeft] = Column.create(left, 0.5, Fill);
 
+  const list = new List([
+    "first list item",
+    "second list item",
+    "third list item",
+  ], 1);
+  const input = new Input(right);
+
+  const eventHandler = createEventHandler(list, input);
+
   await screen.transaction(() => {
     // Write line numbers to screen
     lineNumbers.render({
@@ -45,16 +55,8 @@ try {
     footer.render(new Text("x".repeat(footer.width)));
 
     topLeft.render(new Text(INTRO_TEXT, { wrap: true }));
-    bottomLeft.render(
-      new List([
-        "first list item",
-        "second list item",
-        "third list item",
-      ], 1),
-    );
+    bottomLeft.render(list);
   });
-
-  const input = new Input(right);
 
   for await (const event of eventStream(Deno.stdin)) {
     log.debug(event);
@@ -64,10 +66,11 @@ try {
       break;
     }
 
-    input.handleEvent(event);
+    eventHandler(event);
 
     // Re-render
     await screen.transaction(() => {
+      bottomLeft.render(list);
       right.render(input);
     });
   }
