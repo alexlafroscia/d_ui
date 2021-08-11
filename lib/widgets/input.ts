@@ -26,6 +26,32 @@ export class Input implements Widget, EventHandler {
     this.buffer = new Matrix<Cell>(view.height, view.width, EMPTY);
   }
 
+  /**
+   * The contents of the input, as a single string
+   */
+  get content(): string {
+    const rows = [];
+
+    for (let y = 0; y < this.buffer.height; y++) {
+      let row = "";
+
+      for (let x = 0; x < this.buffer.width; x++) {
+        const char = this.buffer.get(x, y);
+
+        // Once we are at empty cells, we no longer need ot process the row
+        if (char === EMPTY || char === REPLACE) {
+          break;
+        }
+
+        row += char;
+      }
+
+      rows.push(row);
+    }
+
+    return rows.join("\n").trim();
+  }
+
   clear() {
     this.buffer = new Matrix<Cell>(
       this.buffer.height,

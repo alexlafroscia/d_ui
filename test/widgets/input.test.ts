@@ -1,4 +1,10 @@
-import { assertSpyCall, assertSpyCalls, createView, stub } from "../helpers.ts";
+import {
+  assertEquals,
+  assertSpyCall,
+  assertSpyCalls,
+  createView,
+  stub,
+} from "../helpers.ts";
 import { Input as InputWidget } from "../../lib/widgets/input.ts";
 
 Deno.test("handling printable input events", () => {
@@ -139,4 +145,23 @@ Deno.test("clearing the input", () => {
     args: [{ x: 0, y: 0 }, " "],
     self: view,
   });
+});
+
+Deno.test("exposing the content as a string", () => {
+  const { view } = createView(2, 4);
+  const widget = new InputWidget(view);
+
+  widget.handleEvent({ type: "PrintableInputEvent", key: "a" });
+  widget.handleEvent({ type: "PrintableInputEvent", key: "b" });
+
+  assertEquals(widget.content, "ab");
+
+  widget.handleEvent({ type: "ControlInputEvent", key: "DEL" });
+
+  assertEquals(widget.content, "a");
+
+  widget.handleEvent({ type: "ControlInputEvent", key: "CR" });
+  widget.handleEvent({ type: "PrintableInputEvent", key: "b" });
+
+  assertEquals(widget.content, "a\nb");
 });
