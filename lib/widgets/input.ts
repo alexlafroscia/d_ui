@@ -53,6 +53,7 @@ export class Input implements Widget, EventHandler {
   }
 
   clear() {
+    this.cursorPosition = { x: 0, y: 0 };
     this.buffer = new Matrix<Cell>(
       this.buffer.height,
       this.buffer.width,

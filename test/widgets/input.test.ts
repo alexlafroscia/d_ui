@@ -145,6 +145,14 @@ Deno.test("clearing the input", () => {
     args: [{ x: 0, y: 0 }, " "],
     self: view,
   });
+
+  widget.handleEvent({ type: "PrintableInputEvent", key: "a" });
+  view.render(widget);
+
+  assertSpyCall(renderCell, 2, {
+    args: [{ x: 0, y: 0 }, "a"],
+    self: view,
+  });
 });
 
 Deno.test("exposing the content as a string", () => {
