@@ -4,14 +4,14 @@ import {
   assertSpyCalls,
   createView,
   stub,
-} from "../helpers.ts";
-import { List } from "../../lib/widgets/list.ts";
-import { Row } from "../../lib/renderable/mod.ts";
-import { Colors } from "../../lib/color/mod.ts";
+} from "../../helpers.ts";
+import { StringList } from "../../../lib/widgets/list/string.ts";
+import { Row } from "../../../lib/renderable/mod.ts";
+import { Colors } from "../../../lib/color/mod.ts";
 
 Deno.test("writing entries", () => {
   const { view } = createView(3, 10);
-  const list = new List(["first", "second"]);
+  const list = new StringList(["first", "second"]);
   const renderRow = stub(view, "renderRow");
 
   view.render(list);
@@ -31,7 +31,7 @@ Deno.test("writing entries", () => {
 
 Deno.test("rendering a selected entry", () => {
   const { view } = createView(3, 10);
-  const list = new List(["first"], 0);
+  const list = new StringList(["first"], 0);
   const renderRow = stub(view, "renderRow");
 
   view.render(list);
@@ -45,7 +45,7 @@ Deno.test("rendering a selected entry", () => {
 });
 
 Deno.test("customizing the rendered Row", () => {
-  class RedList extends List {
+  class RedStringList extends StringList {
     makeRow(entry: string, selected: boolean): Row {
       return selected
         ? new Row(entry, Colors.White, Colors.Red)
@@ -53,7 +53,7 @@ Deno.test("customizing the rendered Row", () => {
     }
   }
   const { view } = createView(3, 10);
-  const list = new RedList(["first"], 0);
+  const list = new RedStringList(["first"], 0);
   const renderRow = stub(view, "renderRow");
 
   view.render(list);
@@ -67,7 +67,7 @@ Deno.test("customizing the rendered Row", () => {
 });
 
 Deno.test("selecting an entry", () => {
-  const list = new List(["first", "second", "third"]);
+  const list = new StringList(["first", "second", "third"]);
 
   assertEquals(list.selected, undefined);
 
@@ -81,7 +81,7 @@ Deno.test("selecting an entry", () => {
 });
 
 Deno.test("selecting the next entry when one is selected", () => {
-  const list = new List(["first", "second", "third"], 0);
+  const list = new StringList(["first", "second", "third"], 0);
 
   assertEquals(list.selected, "first");
 
@@ -99,7 +99,7 @@ Deno.test("selecting the next entry when one is selected", () => {
 });
 
 Deno.test("selecting the next entry when one is not selected", () => {
-  const list = new List(["first", "second", "third"]);
+  const list = new StringList(["first", "second", "third"]);
 
   assertEquals(list.selected, undefined);
 
@@ -109,7 +109,7 @@ Deno.test("selecting the next entry when one is not selected", () => {
 });
 
 Deno.test("selecting the previous entry when one is selected", () => {
-  const list = new List(["first", "second", "third"], 2);
+  const list = new StringList(["first", "second", "third"], 2);
 
   assertEquals(list.selected, "third");
 
@@ -127,7 +127,7 @@ Deno.test("selecting the previous entry when one is selected", () => {
 });
 
 Deno.test("selecting the previous entry when one is not selected", () => {
-  const list = new List(["first", "second", "third"]);
+  const list = new StringList(["first", "second", "third"]);
 
   assertEquals(list.selected, undefined);
 

@@ -6,9 +6,9 @@ import {
   Fill,
   Input,
   Inset,
-  List,
   Row,
   Screen,
+  StringList,
   Text,
 } from "../lib/mod.ts";
 import "./setup-log.ts";
@@ -32,7 +32,7 @@ try {
   );
   const [topLeft, bottomLeft] = Column.create(left, 0.5, Fill);
 
-  const list = new List([
+  const list = new StringList([
     "first list item",
     "second list item",
     "third list item",

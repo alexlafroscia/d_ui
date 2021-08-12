@@ -1,22 +1,23 @@
-import { DrawApi, Widget } from "./widget.ts";
-import { EventHandler } from "./event-handler.ts";
-import { Colors } from "../color/mod.ts";
-import { Row } from "../renderable/mod.ts";
-import { Event } from "../events/event.ts";
+import { DrawApi, Widget } from "../widget.ts";
+import { EventHandler } from "../event-handler.ts";
+import { Row } from "../../renderable/mod.ts";
+import { Event } from "../../events/event.ts";
 
-export class List implements Widget, EventHandler {
+export abstract class List<T> implements Widget, EventHandler {
   protected selectedIndex: number | undefined = undefined;
   private offset = 0;
 
-  constructor(private entries: string[], selectedEntryIndex?: number) {
+  constructor(private entries: T[], selectedEntryIndex?: number) {
     this.selectedIndex = selectedEntryIndex;
   }
+
+  abstract makeRow(entry: T, selected: boolean): Row;
 
   get hasSelection(): boolean {
     return typeof this.selectedIndex === "number";
   }
 
-  get selected(): string | undefined {
+  get selected(): T | undefined {
     return this.hasSelection ? this.entries[this.selectedIndex!] : undefined;
   }
 
@@ -44,12 +45,6 @@ export class List implements Widget, EventHandler {
 
   clearSelection() {
     this.selectedIndex = undefined;
-  }
-
-  makeRow(entry: string, selected: boolean): Row {
-    return selected
-      ? new Row(entry, Colors.Black, Colors.Blue)
-      : new Row(entry);
   }
 
   draw({ height, renderRow }: DrawApi) {
