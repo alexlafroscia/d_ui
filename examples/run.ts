@@ -51,10 +51,10 @@ try {
       },
     });
 
-    header.render(new Text("x".repeat(header.width)));
-    footer.render(new Text("x".repeat(footer.width)));
+    header.render(new Text(header, "x".repeat(header.width)));
+    footer.render(new Text(footer, "x".repeat(footer.width)));
 
-    topLeft.render(new Text(INTRO_TEXT, { wrap: true }));
+    topLeft.render(new Text(topLeft, INTRO_TEXT, { wrap: true }));
     bottomLeft.render(list);
   });
 

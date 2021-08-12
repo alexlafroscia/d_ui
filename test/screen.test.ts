@@ -18,7 +18,7 @@ Deno.test("cannot render outside of a transaction", async () => {
 
   assertThrows(
     () => {
-      screen.render(new Text("test"));
+      screen.render(new Text(screen, "test"));
     },
     undefined,
     ERR_NOT_IN_TRANSITION,
