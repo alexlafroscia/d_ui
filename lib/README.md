@@ -11,7 +11,13 @@ until a `1.0.0` release is made.
 ## Usage
 
 ```typescript
-const { Screen, Row, Relative, Fill, Text } from 'https://deno.land/x/d_ui/mod.ts';
+import {
+  Fill,
+  Relative,
+  Row,
+  Screen,
+  Text,
+} from "https://deno.land/x/d_ui/mod.ts";
 
 // Create a `Screen` instance to get started
 const screen = await Screen.create();
@@ -24,7 +30,7 @@ const [left, center, right] = Row.create(
   // Percentage-based width
   Relative.Third,
   // Fill remaining space
-  Fill
+  Fill,
 );
 
 // Write to the screen during a "transaction"
