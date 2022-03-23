@@ -33,5 +33,5 @@ export abstract class Backend {
     this.isTransitioning = false;
   }
 
-  cleanup?(): Promise<void>;
+  cleanup?(): Promise<void> | void;
 }

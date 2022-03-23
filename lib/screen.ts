@@ -71,9 +71,10 @@ export class Screen extends View {
   }
 
   /**
-   * Restore `STDOUT` to normal working order
+   * Restore `STDIN` and `STDOUT` to normal working order
    */
   async cleanup() {
     await this.backend.cleanup?.();
+    this.eventSource.cleanup?.();
   }
 }

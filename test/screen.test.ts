@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "./helpers.ts";
+import { assertEquals, assertSpyCall, assertThrows, stub } from "./helpers.ts";
 import { ERR_NOT_IN_TRANSITION, MemoryBackend } from "../lib/backend/mod.ts";
 import { ManualEventSource } from "../lib/event-source/mod.ts";
 import { Text } from "../lib/widgets/text.ts";
@@ -50,4 +50,34 @@ Deno.test("the height and width match the initial size", async () => {
     backend.width,
     "The width matches the expected value",
   );
+});
+
+Deno.test("cleanup", async () => {
+  class MemoryBackendWithCleanup extends MemoryBackend {
+    cleanup() {}
+  }
+
+  class ManualEventSourceWithCleanup extends ManualEventSource {
+    cleanup() {}
+  }
+
+  const backend = new MemoryBackendWithCleanup(4, 2);
+  const eventSource = new ManualEventSourceWithCleanup();
+
+  const backendCleanup = stub(backend, "cleanup");
+  const eventSourceCleanup = stub(eventSource, "cleanup");
+
+  const screen = await Screen.create({
+    backend,
+    eventSource,
+  });
+
+  await screen.cleanup();
+
+  assertSpyCall(backendCleanup, 0, {
+    args: [],
+  });
+  assertSpyCall(eventSourceCleanup, 0, {
+    args: [],
+  });
 });
