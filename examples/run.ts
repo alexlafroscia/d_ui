@@ -2,7 +2,6 @@ import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
 import {
   Column,
   createEventHandler,
-  eventStream,
   Fill,
   Input,
   Inset,
@@ -58,7 +57,7 @@ try {
     bottomLeft.render(list);
   });
 
-  for await (const event of eventStream(Deno.stdin)) {
+  for await (const event of screen.events()) {
     log.debug(event);
 
     // Stop the event loop if the user hits `CTL-C`

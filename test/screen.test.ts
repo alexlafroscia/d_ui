@@ -1,5 +1,6 @@
 import { assertEquals, assertThrows } from "./helpers.ts";
 import { ERR_NOT_IN_TRANSITION, MemoryBackend } from "../lib/backend/mod.ts";
+import { ManualEventSource } from "../lib/event-source/mod.ts";
 import { Text } from "../lib/widgets/text.ts";
 import { Screen } from "../lib/screen.ts";
 
@@ -8,6 +9,7 @@ Deno.test("cannot use the constructor directly", () => {
     () => {
       new Screen({
         backend: new MemoryBackend(4, 2),
+        eventSource: new ManualEventSource(),
       }, Symbol());
     },
     undefined,
@@ -19,6 +21,7 @@ Deno.test("cannot render outside of a transaction", async () => {
   const backend = new MemoryBackend(1, 4);
   const screen = await Screen.create({
     backend,
+    eventSource: new ManualEventSource(),
   });
 
   assertThrows(
@@ -34,6 +37,7 @@ Deno.test("the height and width match the initial size", async () => {
   const backend = new MemoryBackend(4, 2);
   const screen = await Screen.create({
     backend,
+    eventSource: new ManualEventSource(),
   });
 
   assertEquals(
