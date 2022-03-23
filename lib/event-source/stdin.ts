@@ -1,21 +1,25 @@
-import { eventStream } from "../events/mod.ts";
+import { parseEventFromChunk } from "../events/parse.ts";
 import { EventSource } from "./event-source.ts";
 
-export class ReaderEventSource implements EventSource {
-  constructor(private reader: Deno.Reader) {}
+export class ByteStreamEventSource implements EventSource {
+  constructor(private stream: ReadableStream<Uint8Array>) {}
 
   async *[Symbol.asyncIterator]() {
-    for await (const event of eventStream(this.reader)) {
-      yield event;
+    for await (const chunk of this.stream) {
+      const event = parseEventFromChunk(chunk);
+
+      if (event) {
+        yield event;
+      }
     }
   }
 }
 
-export class StdinEventSource extends ReaderEventSource implements EventSource {
+export class StdinEventSource extends ByteStreamEventSource {
   private rid: number;
 
   constructor() {
-    super(Deno.stdin);
+    super(Deno.stdin.readable);
 
     this.rid = Deno.stdin.rid;
 
