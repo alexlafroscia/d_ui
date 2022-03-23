@@ -5,13 +5,19 @@ import { Backend, StdoutBackend } from "./backend/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
+interface ScreenOptions {
+  backend?: Backend;
+}
+
 export class Screen extends View {
   private backend: Backend;
 
-  constructor(backend: Backend, privateSymbol: symbol) {
+  constructor(options: Required<ScreenOptions>, privateSymbol: symbol) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
       throw new Error("You may not use the `Screen` constructor directly");
     }
+
+    const { backend } = options;
 
     const matrix = new Matrix(backend.height, backend.width, new Cell());
 
@@ -27,11 +33,11 @@ export class Screen extends View {
   /**
    * Create a `Screen` instance and prepare `STDOUT` for writing
    */
-  static async create(backend?: Backend): Promise<Screen> {
+  static async create({ backend }: ScreenOptions = {}): Promise<Screen> {
     // If `backend` is not provided, default to setting up `STDOUT`
     backend = backend ?? (await StdoutBackend.create());
 
-    return new Screen(backend, CANNOT_USE_CONSTRUCTOR_DIRECTLY);
+    return new Screen({ backend }, CANNOT_USE_CONSTRUCTOR_DIRECTLY);
   }
 
   /**

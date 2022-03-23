@@ -6,7 +6,9 @@ import { Screen } from "../lib/screen.ts";
 Deno.test("cannot use the constructor directly", () => {
   assertThrows(
     () => {
-      new Screen(new MemoryBackend(4, 2), Symbol());
+      new Screen({
+        backend: new MemoryBackend(4, 2),
+      }, Symbol());
     },
     undefined,
     "You may not use the `Screen` constructor directly",
@@ -14,7 +16,10 @@ Deno.test("cannot use the constructor directly", () => {
 });
 
 Deno.test("cannot render outside of a transaction", async () => {
-  const screen = await Screen.create(new MemoryBackend(1, 4));
+  const backend = new MemoryBackend(1, 4);
+  const screen = await Screen.create({
+    backend,
+  });
 
   assertThrows(
     () => {
@@ -27,7 +32,9 @@ Deno.test("cannot render outside of a transaction", async () => {
 
 Deno.test("the height and width match the initial size", async () => {
   const backend = new MemoryBackend(4, 2);
-  const screen = await Screen.create(backend);
+  const screen = await Screen.create({
+    backend,
+  });
 
   assertEquals(
     screen.height,
