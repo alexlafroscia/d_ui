@@ -4,6 +4,7 @@ import { View } from "./view/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";
 import {
   EventSource,
+  InitEventSource,
   MuxEventSource,
   SignalEventSource,
   StdinEventSource,
@@ -48,10 +49,12 @@ export class Screen extends View {
     // If `backend` is not provided, default to setting up `STDOUT`
     backend = backend ?? (await StdoutBackend.create());
 
-    // If `eventSource` is not provided, listen for events from
-    // 1. STDIN
-    // 2. Some specific OS Signals
+    // If `eventSource` is not provided, collect events from
+    // 1. An initial event (for the first render)
+    // 2. STDIN (for user input)
+    // 3. Some specific OS Signals (like terminal resizing)
     eventSource = eventSource ?? new MuxEventSource([
+      new InitEventSource(),
       new StdinEventSource(),
       new SignalEventSource("SIGWINCH"),
     ]);
