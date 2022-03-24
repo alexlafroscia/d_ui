@@ -2,7 +2,12 @@ import { Cell } from "./renderable/cell.ts";
 import { Matrix } from "./matrix/mod.ts";
 import { View } from "./view/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";
-import { EventSource, StdinEventSource } from "./event-source/mod.ts";
+import {
+  EventSource,
+  MuxEventSource,
+  SignalEventSource,
+  StdinEventSource,
+} from "./event-source/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -43,8 +48,13 @@ export class Screen extends View {
     // If `backend` is not provided, default to setting up `STDOUT`
     backend = backend ?? (await StdoutBackend.create());
 
-    // If `eventSource` is not provided, fall back to `STDIN`
-    eventSource = eventSource ?? new StdinEventSource();
+    // If `eventSource` is not provided, listen for events from
+    // 1. STDIN
+    // 2. Some specific OS Signals
+    eventSource = eventSource ?? new MuxEventSource([
+      new StdinEventSource(),
+      new SignalEventSource("SIGWINCH"),
+    ]);
 
     return new Screen(
       {
