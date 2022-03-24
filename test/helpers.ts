@@ -18,7 +18,7 @@ export {
 export {
   assertSpyCall,
   assertSpyCalls,
+  type Spy,
   spy,
   stub,
-} from "https://deno.land/x/mock@v0.10.0/mod.ts";
-export type { Spy } from "https://deno.land/x/mock@v0.10.0/mod.ts";
+} from "https://deno.land/x/mock@0.15.0/mod.ts";
