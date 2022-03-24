@@ -15,4 +15,9 @@ export type PrintableInputEvent = {
   key: string;
 };
 
-export type Event = ControlInputEvent | PrintableInputEvent;
+export type SignalEvent = {
+  type: "SignalEvent";
+  signal: Deno.Signal;
+};
+
+export type Event = ControlInputEvent | PrintableInputEvent | SignalEvent;
