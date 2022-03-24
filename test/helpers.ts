@@ -12,9 +12,9 @@ export function createView(height = 8, width = 8) {
 export {
   assert,
   assertEquals,
+  assertRejects,
   assertThrows,
-  assertThrowsAsync,
-} from "https://deno.land/std@0.104.0/testing/asserts.ts";
+} from "https://deno.land/std@0.130.0/testing/asserts.ts";
 export {
   assertSpyCall,
   assertSpyCalls,
