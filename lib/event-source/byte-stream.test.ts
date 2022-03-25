@@ -1,4 +1,4 @@
-import { assertEquals } from "../../test/helpers.ts";
+import { assertEquals } from "asserts";
 import { ByteStreamEventSource } from "./stdin.ts";
 import { ControlCharacter as AsciiControlCharacer } from "../events/ascii.ts";
 import {

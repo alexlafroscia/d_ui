@@ -1,4 +1,5 @@
-import { assertEquals, assertSpyCall, stub } from "../../test/helpers.ts";
+import { assertEquals } from "asserts";
+import { assertSpyCall, stub } from "mock";
 import { MuxEventSource } from "./mux.ts";
 import { ManualEventSource } from "./manual.ts";
 

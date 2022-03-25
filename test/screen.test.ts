@@ -1,4 +1,6 @@
-import { assertEquals, assertSpyCall, assertThrows, stub } from "./helpers.ts";
+import { assertEquals, assertThrows } from "asserts";
+import { assertSpyCall, stub } from "mock";
+
 import { ERR_NOT_IN_TRANSITION, MemoryBackend } from "../lib/backend/mod.ts";
 import { ManualEventSource } from "../lib/event-source/mod.ts";
 import { Text } from "../lib/widgets/text.ts";

@@ -1,4 +1,5 @@
-import { assertEquals, createView } from "../helpers.ts";
+import { assertEquals } from "asserts";
+import { createView } from "../helpers.ts";
 
 Deno.test("creating a view", () => {
   const { view } = createView();

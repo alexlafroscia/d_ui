@@ -1,4 +1,4 @@
-import { assertSpyCall, Spy, stub } from "../../test/helpers.ts";
+import { assertSpyCall, Spy, stub } from "mock";
 import { StdinEventSource } from "./stdin.ts";
 
 Deno.test('setting "raw mode" on STDIN', async (t) => {

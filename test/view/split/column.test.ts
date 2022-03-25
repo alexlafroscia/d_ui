@@ -1,4 +1,5 @@
-import { assertEquals, assertThrows, createView } from "../../helpers.ts";
+import { assertEquals, assertThrows } from "asserts";
+import { createView } from "../../helpers.ts";
 import { Column } from "../../../lib/view/split/column.ts";
 
 Deno.test("cannot instantiate a Column with the constructor", () => {

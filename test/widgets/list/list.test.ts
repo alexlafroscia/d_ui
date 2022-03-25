@@ -1,10 +1,6 @@
-import {
-  assertEquals,
-  assertSpyCall,
-  assertSpyCalls,
-  createView,
-  stub,
-} from "../../helpers.ts";
+import { assertEquals } from "asserts";
+import { assertSpyCall, assertSpyCalls, stub } from "mock";
+import { createView } from "../../helpers.ts";
 import { StringList } from "../../../lib/widgets/list/string.ts";
 import { Row } from "../../../lib/renderable/mod.ts";
 import { Colors } from "../../../lib/color/mod.ts";

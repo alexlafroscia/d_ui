@@ -1,4 +1,4 @@
-import { assertEquals } from "../helpers.ts";
+import { assertEquals } from "asserts";
 import { ReverseControlCharacterMap } from "../../lib/events/ascii.ts";
 import { CSI, Escape } from "../../lib/events/ansi.ts";
 import { parseEventFromChunk } from "../../lib/events/parse.ts";

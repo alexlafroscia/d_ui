@@ -1,4 +1,4 @@
-import { assertRejects, assertThrows } from "../helpers.ts";
+import { assertRejects, assertThrows } from "asserts";
 import { StringWriter } from "https://deno.land/std@0.102.0/io/mod.ts";
 import { StdoutBackend } from "../../lib/backend/stdout.ts";
 

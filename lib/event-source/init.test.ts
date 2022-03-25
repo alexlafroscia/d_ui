@@ -1,4 +1,4 @@
-import { assertEquals } from "../../test/helpers.ts";
+import { assertEquals } from "asserts";
 import { InitEventSource } from "./init.ts";
 
 Deno.test("emitting an InitEvent", async () => {

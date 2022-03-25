@@ -1,4 +1,6 @@
-import { assertEquals, assertSpyCall, Spy, stub } from "../../test/helpers.ts";
+import { assertEquals } from "asserts";
+import { assertSpyCall, Spy, stub } from "mock";
+
 import { SignalEventSource } from "./signal.ts";
 
 Deno.test("listening for a signal", async (t) => {

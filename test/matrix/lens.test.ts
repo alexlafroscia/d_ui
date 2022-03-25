@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "../helpers.ts";
+import { assertEquals, assertThrows } from "asserts";
 import { Lens, Matrix } from "../../lib/matrix/mod.ts";
 
 Deno.test("using a Lens to interact with a Matrix", () => {

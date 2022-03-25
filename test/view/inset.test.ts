@@ -1,4 +1,5 @@
-import { assertEquals, createView } from "../helpers.ts";
+import { assertEquals } from "asserts";
+import { createView } from "../helpers.ts";
 import { Inset } from "../../lib/mod.ts";
 
 Deno.test("creating an Inset", () => {

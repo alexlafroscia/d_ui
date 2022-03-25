@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "../../helpers.ts";
+import { assertEquals, assertThrows } from "asserts";
 import {
   ERR_NEGATIVE_SPLIT_SIZE,
   ERR_TOO_LARGE,

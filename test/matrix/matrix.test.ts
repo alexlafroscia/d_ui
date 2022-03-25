@@ -1,10 +1,5 @@
-import {
-  assertEquals,
-  assertSpyCall,
-  assertThrows,
-  Spy,
-  spy,
-} from "../helpers.ts";
+import { assertEquals, assertThrows } from "asserts";
+import { assertSpyCall, Spy, spy } from "mock";
 import { Matrix } from "../../lib/matrix/mod.ts";
 
 Deno.test("using a matrix", () => {

@@ -8,17 +8,3 @@ export function createView(height = 8, width = 8) {
 
   return { matrix, view };
 }
-
-export {
-  assert,
-  assertEquals,
-  assertRejects,
-  assertThrows,
-} from "https://deno.land/std@0.130.0/testing/asserts.ts";
-export {
-  assertSpyCall,
-  assertSpyCalls,
-  type Spy,
-  spy,
-  stub,
-} from "https://deno.land/x/mock@0.15.0/mod.ts";

@@ -1,4 +1,6 @@
-import { assertEquals, assertSpyCalls, stub } from "../helpers.ts";
+import { assertEquals } from "asserts";
+import { assertSpyCalls, stub } from "mock";
+
 import { Event } from "../../lib/events/event.ts";
 import {
   createEventHandler,

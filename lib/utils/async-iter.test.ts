@@ -1,4 +1,4 @@
-import { assertEquals } from "../../test/helpers.ts";
+import { assertEquals } from "asserts";
 import { map } from "./async-iter.ts";
 
 async function* from<T>(...values: T[]) {

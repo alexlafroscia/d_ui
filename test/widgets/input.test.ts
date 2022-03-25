@@ -1,10 +1,6 @@
-import {
-  assertEquals,
-  assertSpyCall,
-  assertSpyCalls,
-  createView,
-  stub,
-} from "../helpers.ts";
+import { assertEquals } from "asserts";
+import { assertSpyCall, assertSpyCalls, stub } from "mock";
+import { createView } from "../helpers.ts";
 import { Input as InputWidget } from "../../lib/widgets/input.ts";
 
 Deno.test("handling printable input events", () => {

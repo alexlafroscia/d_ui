@@ -1,4 +1,4 @@
-import { assertEquals } from "../../test/helpers.ts";
+import { assertEquals } from "asserts";
 import { ManualEventSource } from "./manual.ts";
 
 async function hasResolved(promise: Promise<unknown>): Promise<boolean> {

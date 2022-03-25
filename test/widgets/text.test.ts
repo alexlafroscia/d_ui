@@ -1,4 +1,5 @@
-import { assertSpyCall, assertSpyCalls, createView, stub } from "../helpers.ts";
+import { assertSpyCall, assertSpyCalls, stub } from "mock";
+import { createView } from "../helpers.ts";
 import { Text as TextWidget } from "../../lib/widgets/text.ts";
 
 Deno.test("writing a string without wrapping", () => {
