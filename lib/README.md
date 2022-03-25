@@ -10,11 +10,15 @@ until a `1.0.0` release is made.
 
 ## Usage
 
+The following is a brief example of using this library; see the `examples` directory for more!
+
 ```typescript
+/** @jsx h */
 import {
+  Columns,
   Fill,
+  h,
   Relative,
-  Row,
   Screen,
   Text,
 } from "https://deno.land/x/d_ui/mod.ts";
@@ -22,23 +26,25 @@ import {
 // Create a `Screen` instance to get started
 const screen = await Screen.create();
 
-// The `Screen` can be written to directly, or sub-divided into parts
-const [left, center, right] = Row.create(
-  screen,
-  // Exact pixel width
-  10,
-  // Percentage-based width
-  Relative.Third,
-  // Fill remaining space
-  Fill,
-);
+try {
+  // `screen` emits events from `STDOUT` by default
+  for await (const event of screen.events()) {
+    // Stop the event loop if the user hits `CTL-C`
+    if (event.type === "ControlInputEvent" && event.key === "ETX") {
+      break;
+    }
 
-// Write to the screen during a "transaction"
-await screen.transaction(() => {
-  left.render(new Text("Hello"));
-  center.render(new Text("My"));
-  right.render(new Text("Friend!"));
-});
+    await screen.render(
+      <Columns sizes={[10, Relative.Third, Fill]}>
+        <Text>Hello</Text>
+        <Text>My</Text>
+        <Text>Friend</Text>
+      </Columns>,
+    );
+  }
+} finally {
+  await screen.cleanup();
+}
 ```
 
 ## Prior Art
