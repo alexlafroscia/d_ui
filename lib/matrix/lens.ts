@@ -35,15 +35,28 @@ export class Lens<T> extends MatrixLike<T> {
     return this.to.x - this.from.x + 1;
   }
 
-  get(x: number, y: number): T {
-    this.validateAccess(x, y);
+  get(point: Point): T {
+    this.validateAccess(point);
 
-    return this.parent.get(x + this.from.x, y + this.from.y);
+    const { x, y } = point;
+
+    return this.parent.get({
+      x: x + this.from.x,
+      y: y + this.from.y,
+    });
   }
 
-  set(x: number, y: number, value: T): T {
-    this.validateAccess(x, y);
+  set(point: Point, value: T): T {
+    this.validateAccess(point);
 
-    return this.parent.set(x + this.from.x, y + this.from.y, value);
+    const { x, y } = point;
+
+    return this.parent.set(
+      {
+        x: x + this.from.x,
+        y: y + this.from.y,
+      },
+      value,
+    );
   }
 }

@@ -23,7 +23,7 @@ Deno.test("writing a cell to a view", () => {
 
   for (let x = 0; x < view.width; x++) {
     for (let y = 0; y < view.height; y++) {
-      assertEquals(matrix.get(x, y).content, "x");
+      assertEquals(matrix.get({ x, y }).content, "x");
     }
   }
 });
@@ -37,8 +37,8 @@ Deno.test("writing a row to a view", () => {
     },
   });
 
-  assertEquals(matrix.get(0, 0).content, "x");
-  assertEquals(matrix.get(1, 0).content, " ");
+  assertEquals(matrix.get({ x: 0, y: 0 }).content, "x");
+  assertEquals(matrix.get({ x: 1, y: 0 }).content, " ");
 
   view.render({
     draw({ renderRow }) {
@@ -46,6 +46,6 @@ Deno.test("writing a row to a view", () => {
     },
   });
 
-  assertEquals(matrix.get(0, 0).content, "x");
-  assertEquals(matrix.get(1, 0).content, "x");
+  assertEquals(matrix.get({ x: 0, y: 0 }).content, "x");
+  assertEquals(matrix.get({ x: 1, y: 0 }).content, "x");
 });

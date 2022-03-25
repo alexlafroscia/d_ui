@@ -44,7 +44,7 @@ Deno.test("creating a row from a view", () => {
 
   for (let x = 0; x < view.width; x++) {
     for (let y = 0; y < view.height; y++) {
-      assertEquals(matrix.get(x, y).content, x > 1 ? "r" : "l");
+      assertEquals(matrix.get({ x, y }).content, x > 1 ? "r" : "l");
     }
   }
 });

@@ -39,7 +39,7 @@ Deno.test("creating a column from a view", () => {
 
   for (let x = 0; x < view.width; x++) {
     for (let y = 0; y < view.height; y++) {
-      assertEquals(matrix.get(x, y).content, y > 3 ? "b" : "t");
+      assertEquals(matrix.get({ x, y }).content, y > 3 ? "b" : "t");
     }
   }
 });

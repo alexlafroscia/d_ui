@@ -1,6 +1,6 @@
 import { Backend } from "./mod.ts";
 import { Cell } from "../renderable/mod.ts";
-import { Matrix } from "../matrix/mod.ts";
+import { Matrix, Point } from "../matrix/mod.ts";
 
 export class MemoryBackend extends Backend {
   private matrix: Matrix<Cell>;
@@ -19,13 +19,13 @@ export class MemoryBackend extends Backend {
     return this.matrix.width;
   }
 
-  get(x: number, y: number): Cell {
-    return this.matrix.get(x, y);
+  get(point: Point): Cell {
+    return this.matrix.get(point);
   }
 
   write() {
     for (const [point, cell] of this.renderingQueue) {
-      this.matrix.set(point.x, point.y, cell);
+      this.matrix.set(point, cell);
     }
   }
 }

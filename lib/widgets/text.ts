@@ -75,16 +75,16 @@ export class Text implements Widget {
 
         // Outside the boundary of the line content
         if (letter === "") {
-          const currentContent = this.buffer.get(x, y);
+          const currentContent = this.buffer.get({ x, y });
 
           // If the current content is already "empty", we don't need to keep going
           if (currentContent === EMPTY) {
             break;
           }
 
-          this.buffer.set(x, y, REPLACE);
+          this.buffer.set({ x, y }, REPLACE);
         } else {
-          this.buffer.set(x, y, letter);
+          this.buffer.set({ x, y }, letter);
         }
       }
     }
@@ -93,14 +93,14 @@ export class Text implements Widget {
   draw({ height, width, renderCell }: DrawApi) {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const value = this.buffer.get(x, y);
+        const value = this.buffer.get({ x, y });
 
         // If the value is the `REPLACE` sigil, we need to:
         // 1. Write an empty space to this location
         // 2. Update our data store, to avoid re-writing this location in the future
         if (value === REPLACE) {
           renderCell({ x, y }, " ");
-          this.buffer.set(x, y, EMPTY);
+          this.buffer.set({ x, y }, EMPTY);
           continue;
         }
 

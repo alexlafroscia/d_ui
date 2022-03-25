@@ -25,16 +25,20 @@ export class Matrix<T> extends MatrixLike<T> {
     return this.rows[0].length;
   }
 
-  get(x: number, y: number): T {
-    this.validateAccess(x, y);
+  get(point: Point): T {
+    this.validateAccess(point);
+
+    const { x, y } = point;
 
     return this.rows[y][x];
   }
 
-  set(x: number, y: number, value: T): T {
-    this.validateAccess(x, y);
+  set(point: Point, value: T): T {
+    this.validateAccess(point);
 
-    this.onUpdate?.({ x, y }, value);
+    this.onUpdate?.(point, value);
+
+    const { x, y } = point;
 
     return (this.rows[y][x] = value);
   }

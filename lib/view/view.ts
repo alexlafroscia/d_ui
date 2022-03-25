@@ -29,14 +29,14 @@ export class View implements DrawApi {
       ? new Cell(content, Colors.White)
       : content;
 
-    this.matrix.set(point.x, point.y, cell);
+    this.matrix.set(point, cell);
   }
 
   renderRow(y: number, content: Row | string) {
     const row = typeof content === "string" ? new Row(content) : content;
 
     for (const x of range(0, this.width - 1)) {
-      this.matrix.set(x, y, row.cellAt(x));
+      this.matrix.set({ x, y }, row.cellAt(x));
     }
   }
 

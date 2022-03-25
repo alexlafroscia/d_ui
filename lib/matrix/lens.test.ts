@@ -1,5 +1,6 @@
 import { assertEquals, assertThrows } from "asserts";
-import { Lens, Matrix } from "../../lib/matrix/mod.ts";
+import { Matrix } from "./matrix.ts";
+import { Lens } from "./lens.ts";
 
 Deno.test("using a Lens to interact with a Matrix", () => {
   const matrix = new Matrix(8, 8, false);
@@ -8,13 +9,21 @@ Deno.test("using a Lens to interact with a Matrix", () => {
   assertEquals(lens.height, 5, "Computes the height from the coordinates");
   assertEquals(lens.width, 5, "Computes the width from the coordinates");
 
-  matrix.set(2, 2, true);
+  matrix.set({ x: 2, y: 2 }, true);
 
-  assertEquals(lens.get(0, 0), true, "The Lens reads through to the parent");
+  assertEquals(
+    lens.get({ x: 0, y: 0 }),
+    true,
+    "The Lens reads through to the parent",
+  );
 
-  lens.set(1, 1, true);
+  lens.set({ x: 1, y: 1 }, true);
 
-  assertEquals(matrix.get(3, 3), true, "The Lens writes through to the parent");
+  assertEquals(
+    matrix.get({ x: 3, y: 3 }),
+    true,
+    "The Lens writes through to the parent",
+  );
 });
 
 Deno.test("writing to the edges of a Matrix through a Lens", () => {
@@ -26,13 +35,13 @@ Deno.test("writing to the edges of a Matrix through a Lens", () => {
 
   for (let x = 0; x < lens.width; x++) {
     for (let y = 0; y < lens.height; y++) {
-      lens.set(x, y, true);
+      lens.set({ x, y }, true);
     }
   }
 
   for (let x = 0; x < lens.width; x++) {
     for (let y = 0; y < lens.height; y++) {
-      assertEquals(matrix.get(x, y), lens.get(x, y));
+      assertEquals(matrix.get({ x, y }), lens.get({ x, y }));
     }
   }
 });
@@ -43,7 +52,7 @@ Deno.test("validating access with `get`", () => {
 
   assertThrows(
     () => {
-      lens.get(0, 2);
+      lens.get({ x: 0, y: 2 });
     },
     undefined,
     "Invalid coordinate access",
@@ -51,7 +60,7 @@ Deno.test("validating access with `get`", () => {
   );
   assertThrows(
     () => {
-      lens.get(2, 0);
+      lens.get({ x: 2, y: 0 });
     },
     undefined,
     "Invalid coordinate access",
@@ -65,7 +74,7 @@ Deno.test("validating access with `set`", () => {
 
   assertThrows(
     () => {
-      lens.set(0, 2, true);
+      lens.set({ x: 0, y: 2 }, true);
     },
     undefined,
     "Invalid coordinate access",
@@ -73,7 +82,7 @@ Deno.test("validating access with `set`", () => {
   );
   assertThrows(
     () => {
-      lens.set(2, 0, true);
+      lens.set({ x: 2, y: 0 }, true);
     },
     undefined,
     "Invalid coordinate access",

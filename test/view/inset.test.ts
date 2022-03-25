@@ -16,8 +16,8 @@ Deno.test("creating an Inset", () => {
     },
   });
 
-  assertEquals(matrix.get(0, 0).content, " ");
-  assertEquals(matrix.get(1, 1).content, "x");
-  assertEquals(matrix.get(6, 6).content, "x");
-  assertEquals(matrix.get(7, 7).content, " ");
+  assertEquals(matrix.get({ x: 0, y: 0 }).content, " ");
+  assertEquals(matrix.get({ x: 1, y: 1 }).content, "x");
+  assertEquals(matrix.get({ x: 6, y: 6 }).content, "x");
+  assertEquals(matrix.get({ x: 7, y: 7 }).content, " ");
 });

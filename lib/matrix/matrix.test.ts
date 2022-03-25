@@ -1,15 +1,15 @@
 import { assertEquals, assertThrows } from "asserts";
 import { assertSpyCall, Spy, spy } from "mock";
-import { Matrix } from "../../lib/matrix/mod.ts";
+import { Matrix } from "./matrix.ts";
 
 Deno.test("using a matrix", () => {
   const matrix = new Matrix(1, 2, 0);
 
-  assertEquals(matrix.get(0, 0), 0);
+  assertEquals(matrix.get({ x: 0, y: 0 }), 0);
 
-  matrix.set(0, 0, 1);
+  matrix.set({ x: 0, y: 0 }, 1);
 
-  assertEquals(matrix.get(0, 0), 1);
+  assertEquals(matrix.get({ x: 0, y: 0 }), 1);
 
   assertEquals(matrix.height, 1);
   assertEquals(matrix.width, 2);
@@ -20,14 +20,14 @@ Deno.test("validating access with `get`", () => {
 
   assertThrows(
     () => {
-      matrix.get(1, 0);
+      matrix.get({ x: 1, y: 0 });
     },
     undefined,
     "Invalid coordinate access",
   );
   assertThrows(
     () => {
-      matrix.get(0, 1);
+      matrix.get({ x: 0, y: 1 });
     },
     undefined,
     "Invalid coordinate access",
@@ -39,14 +39,14 @@ Deno.test("validating access with `set`", () => {
 
   assertThrows(
     () => {
-      matrix.set(1, 0, 1);
+      matrix.set({ x: 1, y: 0 }, 1);
     },
     undefined,
     "Invalid coordinate access",
   );
   assertThrows(
     () => {
-      matrix.set(0, 1, 1);
+      matrix.set({ x: 0, y: 1 }, 1);
     },
     undefined,
     "Invalid coordinate access",
@@ -57,7 +57,7 @@ Deno.test("hooking into `set`", () => {
   const matrix = new Matrix(1, 1, 0);
   matrix.onUpdate = spy();
 
-  matrix.set(0, 0, 1);
+  matrix.set({ x: 0, y: 0 }, 1);
 
   assertSpyCall(matrix.onUpdate as Spy<void>, 0, {
     args: [{ x: 0, y: 0 }, 1],
