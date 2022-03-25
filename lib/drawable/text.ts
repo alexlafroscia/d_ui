@@ -1,13 +1,14 @@
 import { Matrix } from "../matrix/mod.ts";
-import { DrawApi, Widget } from "./widget.ts";
+import { Cell } from "../renderable/mod.ts";
+import { Canvas, Drawable } from "./drawable.ts";
 
 // Empty cells that do not need to be written to
-const EMPTY = Symbol("Empty Cell");
+const EMPTY = Symbol("Empty BufferCell");
 
 // Empty cells that need to be overwritten with empty space
-const REPLACE = Symbol("Replace Cell");
+const REPLACE = Symbol("Replace BufferCell");
 
-type Cell = string | typeof EMPTY | typeof REPLACE;
+type BufferCell = string | typeof EMPTY | typeof REPLACE;
 
 interface TextWidgetConfig {
   wrap?: boolean;
@@ -25,23 +26,25 @@ function chunkString(str: string, length: number): string[] {
   return str.match(new RegExp(".{1," + length + "}", "g"))!;
 }
 
-export class Text implements Widget {
+export class Text extends Drawable {
   /**
    * Keep track of what should be written into the view next time
    */
-  private buffer: Matrix<Cell>;
+  private buffer: Matrix<BufferCell>;
 
   private wrap: boolean;
 
   constructor(
-    view: { height: number; width: number },
-    content: string,
-    config: TextWidgetConfig = {},
+    config: TextWidgetConfig | null,
+    content: string[],
+    view: Canvas,
   ) {
-    this.wrap = config.wrap ?? false;
-    this.buffer = new Matrix<Cell>(view.height, view.width, EMPTY);
+    super(view);
 
-    this.setContent(content);
+    this.wrap = config?.wrap ?? false;
+    this.buffer = new Matrix<BufferCell>(view.height, view.width, EMPTY);
+
+    this.setContent(content.join(""));
   }
 
   setContent(content: string): void {
@@ -90,16 +93,16 @@ export class Text implements Widget {
     }
   }
 
-  draw({ height, width, renderCell }: DrawApi) {
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
+  draw() {
+    for (let y = 0; y < this.canvas.height; y++) {
+      for (let x = 0; x < this.canvas.width; x++) {
         const value = this.buffer.get({ x, y });
 
         // If the value is the `REPLACE` sigil, we need to:
         // 1. Write an empty space to this location
         // 2. Update our data store, to avoid re-writing this location in the future
         if (value === REPLACE) {
-          renderCell({ x, y }, " ");
+          this.canvas.set({ x, y }, new Cell(" "));
           this.buffer.set({ x, y }, EMPTY);
           continue;
         }
@@ -109,7 +112,7 @@ export class Text implements Widget {
           break;
         }
 
-        renderCell({ x, y }, value);
+        this.canvas.set({ x, y }, new Cell(value));
       }
     }
   }

@@ -1,6 +1,5 @@
 import { Cell } from "./renderable/cell.ts";
 import { Matrix } from "./matrix/mod.ts";
-import { View } from "./view/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";
 import {
   EventSource,
@@ -9,6 +8,7 @@ import {
   SignalEventSource,
   StdinEventSource,
 } from "./event-source/mod.ts";
+import { DrawableFactory } from "./drawable/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -17,7 +17,8 @@ interface ScreenOptions {
   eventSource?: EventSource;
 }
 
-export class Screen extends View {
+export class Screen {
+  private matrix: Matrix<Cell>;
   private backend: Backend;
   private eventSource: EventSource;
 
@@ -28,14 +29,12 @@ export class Screen extends View {
 
     const { backend, eventSource } = options;
 
-    const matrix = new Matrix(backend.height, backend.width, new Cell());
-
-    super(matrix);
+    this.matrix = new Matrix(backend.height, backend.width, new Cell());
 
     this.backend = backend;
     this.eventSource = eventSource;
 
-    matrix.onUpdate = (point, cell) => {
+    this.matrix.onUpdate = (point, cell) => {
       this.backend.render(point, cell);
     };
   }
@@ -68,13 +67,12 @@ export class Screen extends View {
     );
   }
 
-  /**
-   * Perform some rendering, then automatically flush the buffer to the screen
-   */
-  async transaction(
-    setupNextRenderCallback: () => Promise<void> | void,
-  ): Promise<void> {
-    await this.backend.transaction(setupNextRenderCallback);
+  async render(builder: DrawableFactory): Promise<void> {
+    await this.backend.transaction(() => {
+      const widget = builder(this.matrix);
+
+      widget.draw();
+    });
   }
 
   async *events() {

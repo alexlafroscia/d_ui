@@ -12,7 +12,7 @@ export abstract class MatrixLike<T> {
 
   abstract set(point: Point, value: T): T;
 
-  protected validateAccess(point: Point) {
+  validateAccess(point: Point) {
     const { x, y } = point;
 
     if (

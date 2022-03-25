@@ -1,4 +1,5 @@
-import { DrawApi, Widget } from "./widget.ts";
+import { Canvas } from "../canvas.ts";
+import { Widget } from "./widget.ts";
 import { EventHandler } from "./event-handler.ts";
 import { Matrix, Point } from "../matrix/mod.ts";
 import { Event } from "../events/event.ts";
@@ -36,7 +37,7 @@ export class Input implements Widget, EventHandler {
       let row = "";
 
       for (let x = 0; x < this.buffer.width; x++) {
-        const char = this.buffer.get({ x, y });
+        const char = this.buffer.get(x, y);
 
         // Once we are at empty cells, we no longer need ot process the row
         if (char === EMPTY || char === REPLACE) {
@@ -68,7 +69,7 @@ export class Input implements Widget, EventHandler {
   handleEvent(event: Event): boolean {
     if (event.type === "PrintableInputEvent") {
       // Set the incoming character at the current position
-      this.buffer.set(this.cursorPosition, event.key);
+      this.buffer.set(this.cursorPosition.x, this.cursorPosition.y, event.key);
 
       // Advance the cursor to the new position
       this.cursorPosition.x++;
@@ -100,8 +101,7 @@ export class Input implements Widget, EventHandler {
           // Work from the end toward the beginning, looking for a renderable character
           for (let i = this.buffer.width - 1; i >= 0; i--) {
             if (
-              typeof this.buffer.get({ x: i, y: this.cursorPosition.y - 1 }) ===
-                "string"
+              typeof this.buffer.get(i, this.cursorPosition.y - 1) === "string"
             ) {
               x = i;
               break;
@@ -113,7 +113,7 @@ export class Input implements Widget, EventHandler {
         }
 
         // Set up this location to be replaced with blank space on the next draw
-        this.buffer.set(this.cursorPosition, REPLACE);
+        this.buffer.set(this.cursorPosition.x, this.cursorPosition.y, REPLACE);
 
         return true;
       }
@@ -131,17 +131,17 @@ export class Input implements Widget, EventHandler {
     return false;
   }
 
-  draw({ height, width, renderCell }: DrawApi) {
+  draw({ height, width, renderCell }: Canvas) {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const value = this.buffer.get({ x, y });
+        const value = this.buffer.get(x, y);
 
         // If the value is the `REPLACE` sigil, we need to:
         // 1. Write an empty space to this location
         // 2. Update our data store, to avoid re-writing this location in the future
         if (value === REPLACE) {
           renderCell({ x, y }, " ");
-          this.buffer.set({ x, y }, EMPTY);
+          this.buffer.set(x, y, EMPTY);
           continue;
         }
 

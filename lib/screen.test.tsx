@@ -1,10 +1,11 @@
 import { assertEquals, assertThrows } from "asserts";
 import { assertSpyCall, stub } from "mock";
+import { createScreen, Filler } from "$test-helpers";
 
-import { ERR_NOT_IN_TRANSITION, MemoryBackend } from "../lib/backend/mod.ts";
-import { ManualEventSource } from "../lib/event-source/mod.ts";
-import { Text } from "../lib/widgets/text.ts";
-import { Screen } from "../lib/screen.ts";
+import { Screen } from "./screen.ts";
+import { MemoryBackend } from "./backend/mod.ts";
+import { ManualEventSource } from "./event-source/mod.ts";
+import { h } from "./jsx.ts";
 
 Deno.test("cannot use the constructor directly", () => {
   assertThrows(
@@ -19,39 +20,34 @@ Deno.test("cannot use the constructor directly", () => {
   );
 });
 
-Deno.test("cannot render outside of a transaction", async () => {
-  const backend = new MemoryBackend(1, 4);
-  const screen = await Screen.create({
-    backend,
-    eventSource: new ManualEventSource(),
+Deno.test("rendering", async (t) => {
+  await t.step("without JSX", async function () {
+    const { screen, backend } = await createScreen();
+
+    await screen.render(
+      (canvas) => new Filler({ value: "x" }, [], canvas),
+    );
+
+    for (let x = 0; x < backend.width; x++) {
+      for (let y = 0; y < backend.height; y++) {
+        assertEquals(backend.get({ x, y }).content, "x");
+      }
+    }
   });
 
-  assertThrows(
-    () => {
-      screen.render(new Text(screen, "test"));
-    },
-    undefined,
-    ERR_NOT_IN_TRANSITION,
-  );
-});
+  await t.step("with JSX", async function () {
+    const { screen, backend } = await createScreen();
 
-Deno.test("the height and width match the initial size", async () => {
-  const backend = new MemoryBackend(4, 2);
-  const screen = await Screen.create({
-    backend,
-    eventSource: new ManualEventSource(),
+    await screen.render(
+      <Filler value="x" />,
+    );
+
+    for (let x = 0; x < backend.width; x++) {
+      for (let y = 0; y < backend.height; y++) {
+        assertEquals(backend.get({ x, y }).content, "x");
+      }
+    }
   });
-
-  assertEquals(
-    screen.height,
-    backend.height,
-    "The height matches the expected value",
-  );
-  assertEquals(
-    screen.width,
-    backend.width,
-    "The width matches the expected value",
-  );
 });
 
 Deno.test("cleanup", async () => {

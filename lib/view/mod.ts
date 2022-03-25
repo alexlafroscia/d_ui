@@ -1,5 +1,4 @@
-export { Column } from "./split/column.ts";
+export { Columns } from "./split/columns.ts";
+export { Rows } from "./split/rows.ts";
 export { Fill, Relative } from "./split/partition.ts";
-export { Inset } from "./inset.ts";
-export { Row } from "./split/row.ts";
 export { View } from "./view.ts";
