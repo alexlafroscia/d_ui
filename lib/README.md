@@ -10,7 +10,8 @@ until a `1.0.0` release is made.
 
 ## Usage
 
-The following is a brief example of using this library; see the `examples` directory for more!
+The following is a brief example of using this library; see the `examples`
+directory for more!
 
 ```typescript
 /** @jsx h */
