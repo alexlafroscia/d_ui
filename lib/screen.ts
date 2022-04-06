@@ -1,26 +1,28 @@
+import { mergeReadableStreams } from "https://deno.land/std@0.133.0/streams/mod.ts";
+
 import { Cell } from "./renderable/cell.ts";
 import { Matrix } from "./matrix/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";
 import {
-  EventSource,
-  InitEventSource,
-  MuxEventSource,
-  SignalEventSource,
-  StdinEventSource,
-} from "./event-source/mod.ts";
+  Event,
+  InitEventReadableStream,
+  RawStdinReadableStream,
+  SignalReadableStream,
+  Uint8ArrayToEventTransformStream,
+} from "./events/mod.ts";
 import { DrawableFactory } from "./drawable/mod.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
 interface ScreenOptions {
   backend?: Backend;
-  eventSource?: EventSource;
+  eventSource?: ReadableStream<Event>;
 }
 
 export class Screen {
   private matrix: Matrix<Cell>;
   private backend: Backend;
-  private eventSource: EventSource;
+  private eventSource: ReadableStream<Event>;
 
   constructor(options: Required<ScreenOptions>, privateSymbol: symbol) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
@@ -43,20 +45,25 @@ export class Screen {
    * Create a `Screen` instance and prepare `STDOUT` for writing
    */
   static async create(
-    { backend, eventSource }: ScreenOptions = {},
+    { backend: backendArg, eventSource: eventSourceArg }: ScreenOptions = {},
   ): Promise<Screen> {
     // If `backend` is not provided, default to setting up `STDOUT`
-    backend = backend ?? (await StdoutBackend.create());
+    const backend = backendArg ?? (await StdoutBackend.create());
 
     // If `eventSource` is not provided, collect events from
     // 1. An initial event (for the first render)
     // 2. STDIN (for user input)
     // 3. Some specific OS Signals (like terminal resizing)
-    eventSource = eventSource ?? new MuxEventSource([
-      new InitEventSource(),
-      new StdinEventSource(),
-      new SignalEventSource("SIGWINCH"),
-    ]);
+    const eventSource = eventSourceArg ?? mergeReadableStreams<Event>(
+      // Emit an initial event so we can render before there is input
+      new InitEventReadableStream(),
+      // Listen for terminal resizing
+      new SignalReadableStream("SIGWINCH"),
+      // Read "raw" input from STDIN and parse it as events
+      new RawStdinReadableStream().pipeThrough(
+        new Uint8ArrayToEventTransformStream(),
+      ),
+    );
 
     return new Screen(
       {
@@ -86,6 +93,6 @@ export class Screen {
    */
   async cleanup() {
     await this.backend.cleanup?.();
-    this.eventSource.cleanup?.();
+    await this.eventSource.cancel();
   }
 }

@@ -4,7 +4,7 @@ import { createScreen, Filler } from "$test-helpers";
 
 import { Screen } from "./screen.ts";
 import { MemoryBackend } from "./backend/mod.ts";
-import { ManualEventSource } from "./event-source/mod.ts";
+import { ManualEventSource } from "./events/source/manual.ts";
 import { h } from "./jsx.ts";
 
 Deno.test("cannot use the constructor directly", () => {
@@ -55,15 +55,11 @@ Deno.test("cleanup", async () => {
     cleanup() {}
   }
 
-  class ManualEventSourceWithCleanup extends ManualEventSource {
-    cleanup() {}
-  }
-
   const backend = new MemoryBackendWithCleanup(4, 2);
-  const eventSource = new ManualEventSourceWithCleanup();
+  const eventSource = new ManualEventSource();
 
   const backendCleanup = stub(backend, "cleanup");
-  const eventSourceCleanup = stub(eventSource, "cleanup");
+  const eventSourceCancel = stub(eventSource, "cancel");
 
   const screen = await Screen.create({
     backend,
@@ -75,7 +71,7 @@ Deno.test("cleanup", async () => {
   assertSpyCall(backendCleanup, 0, {
     args: [],
   });
-  assertSpyCall(eventSourceCleanup, 0, {
+  assertSpyCall(eventSourceCancel, 0, {
     args: [],
   });
 });

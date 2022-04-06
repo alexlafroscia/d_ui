@@ -1,11 +1,11 @@
 import { assertEquals } from "asserts";
-import { ByteStreamEventSource } from "./stdin.ts";
-import { ControlCharacter as AsciiControlCharacer } from "../events/ascii.ts";
+import { Uint8ArrayToEventTransformStream } from "./uint8array-to-event.ts";
+import { ControlCharacter as AsciiControlCharacer } from "../ascii.ts";
 import {
   ControlCharacter as AnsiControlCharacer,
   CSI,
   Escape,
-} from "../events/ansi.ts";
+} from "../ansi.ts";
 
 Deno.test("reading from the stream", async (t) => {
   const stream = new ReadableStream<Uint8Array>({
@@ -23,8 +23,11 @@ Deno.test("reading from the stream", async (t) => {
     },
   });
 
-  const eventSource = new ByteStreamEventSource(stream);
-  const asyncIter = eventSource[Symbol.asyncIterator]();
+  const transformed = stream.pipeThrough(
+    new Uint8ArrayToEventTransformStream(),
+  );
+
+  const asyncIter = transformed[Symbol.asyncIterator]();
 
   await t.step("printable characters", async () => {
     assertEquals(await asyncIter.next(), {

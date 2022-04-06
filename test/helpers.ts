@@ -2,7 +2,8 @@ import { Cell } from "../lib/renderable/mod.ts";
 import { Matrix } from "../lib/matrix/mod.ts";
 import { Canvas, Drawable } from "../lib/drawable/mod.ts";
 import { MemoryBackend } from "../lib/backend/mod.ts";
-import { ManualEventSource, Screen } from "../lib/mod.ts";
+import { ManualEventSource } from "../lib/events/source/manual.ts";
+import { Screen } from "../lib/mod.ts";
 
 /**
  * A Drawable that writes the given `value` to each coordinate of the canvas

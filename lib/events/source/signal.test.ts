@@ -1,7 +1,6 @@
 import { assertEquals } from "asserts";
 import { assertSpyCall, Spy, stub } from "mock";
-
-import { SignalEventSource } from "./signal.ts";
+import { SignalReadableStream } from "./signal.ts";
 
 Deno.test("listening for a signal", async (t) => {
   const signalCallbacks = new Map<Deno.Signal, () => void>();
@@ -18,21 +17,17 @@ Deno.test("listening for a signal", async (t) => {
     "removeSignalListener",
   );
 
-  const source = new SignalEventSource("SIGWINCH", "SIGINFO");
+  const source = new SignalReadableStream("SIGWINCH");
+  const reader = source.getReader();
 
   await t.step("listening for a signal", () => {
     assertSpyCall(addSignalListener, 0, {
       args: ["SIGWINCH", signalCallbacks.get("SIGWINCH")],
     });
-    assertSpyCall(addSignalListener, 1, {
-      args: ["SIGINFO", signalCallbacks.get("SIGINFO")],
-    });
   });
 
   await t.step("emitting events", async () => {
-    const iter = source[Symbol.asyncIterator]();
-
-    let nextEventPromise = iter.next();
+    let nextEventPromise = reader.read();
     signalCallbacks.get("SIGWINCH")?.();
 
     assertEquals(await nextEventPromise, {
@@ -43,7 +38,7 @@ Deno.test("listening for a signal", async (t) => {
       },
     }, "The first signal to be emitted");
 
-    nextEventPromise = iter.next();
+    nextEventPromise = reader.read();
     signalCallbacks.get("SIGWINCH")?.();
 
     assertEquals(await nextEventPromise, {
@@ -53,43 +48,15 @@ Deno.test("listening for a signal", async (t) => {
         signal: "SIGWINCH",
       },
     }, "Emitting another instance of the same signal");
-
-    nextEventPromise = iter.next();
-    signalCallbacks.get("SIGINFO")?.();
-
-    assertEquals(await nextEventPromise, {
-      done: false,
-      value: {
-        type: "SignalEvent",
-        signal: "SIGINFO",
-      },
-    }, "Emitting a different signal than the first time");
-
-    nextEventPromise = iter.next();
-    signalCallbacks.get("SIGBUS")?.();
-    signalCallbacks.get("SIGINFO")?.();
-
-    assertEquals(await nextEventPromise, {
-      done: false,
-      value: {
-        type: "SignalEvent",
-        signal: "SIGINFO",
-      },
-    }, "An unexpected signal was ignored");
   });
 
   await t.step("cleaning up the signal listeners", () => {
-    source.cleanup();
+    reader.cancel();
 
     assertSpyCall(removeSignalListener, 0, {
       args: ["SIGWINCH", signalCallbacks.get("SIGWINCH")],
     });
-    assertSpyCall(removeSignalListener, 1, {
-      args: ["SIGINFO", signalCallbacks.get("SIGINFO")],
-    });
   });
-
-  source.cleanup();
 
   removeSignalListener.restore();
   addSignalListener.restore();
