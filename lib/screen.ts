@@ -1,4 +1,5 @@
 import { mergeReadableStreams } from "https://deno.land/std@0.133.0/streams/mod.ts";
+import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
 
 import { Cell } from "./renderable/cell.ts";
 import { Matrix } from "./matrix/mod.ts";
@@ -28,6 +29,8 @@ export class Screen {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
       throw new Error("You may not use the `Screen` constructor directly");
     }
+
+    log.getLogger("d_ui").debug("Screen: testing");
 
     const { backend, eventSource } = options;
 

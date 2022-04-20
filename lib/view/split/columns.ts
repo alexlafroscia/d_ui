@@ -1,4 +1,5 @@
-import * as log from "https://deno.land/std@0.102.0/log/mod.ts";
+import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
+
 import { Point } from "../../matrix/mod.ts";
 import { partition, Size } from "./partition.ts";
 import { Canvas, Drawable, DrawableFactory } from "../../drawable/mod.ts";
@@ -23,7 +24,9 @@ export class Columns extends Drawable implements Canvas {
     const widths = partition(this.canvas.width, ...sizes);
     let widthUsed = 0;
 
-    log.debug(`Split width ${this.canvas.width} into ${widths}`);
+    log.getLogger("d_ui").debug(
+      `Split width ${this.canvas.width} into ${widths}`,
+    );
 
     this.childViews = zip(children, widths).map(([childFactory, width]) => {
       const view = new View(

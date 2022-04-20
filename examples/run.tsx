@@ -1,3 +1,4 @@
+import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
 import { tick } from "https://deno.land/x/tick@v1.0.0/mod.ts";
 import { MuxAsyncIterator } from "https://deno.land/std@0.130.0/async/mod.ts";
 
@@ -13,6 +14,8 @@ import {
   View,
 } from "../lib/mod.ts";
 import { map } from "../lib/utils/async-iter.ts";
+
+import "./setup-log.ts";
 
 const screen = await Screen.create();
 
@@ -59,6 +62,8 @@ try {
       </Columns>,
     );
   }
+} catch (e) {
+  log.error(e.message);
 } finally {
   await screen.cleanup();
 }
