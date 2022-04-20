@@ -1,4 +1,3 @@
-import { mergeReadableStreams } from "https://deno.land/std@0.133.0/streams/mod.ts";
 import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
 
 import { Cell } from "./renderable/cell.ts";
@@ -12,6 +11,7 @@ import {
   Uint8ArrayToEventTransformStream,
 } from "./events/mod.ts";
 import { DrawableFactory } from "./drawable/mod.ts";
+import { mergeReadableStreams } from "./utils/streams.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -24,6 +24,7 @@ export class Screen {
   private matrix: Matrix<Cell>;
   private backend: Backend;
   private eventSource: ReadableStream<Event>;
+  private eventReader?: ReadableStreamDefaultReader<Event>;
 
   constructor(options: Required<ScreenOptions>, privateSymbol: symbol) {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
@@ -85,9 +86,21 @@ export class Screen {
     });
   }
 
-  async *events() {
-    for await (const event of this.eventSource) {
-      yield event;
+  async *events(): AsyncIterable<Event> {
+    if (!this.eventReader) {
+      this.eventReader = this.eventSource.getReader();
+    }
+
+    let isDone = false;
+
+    while (!isDone) {
+      const { done, value } = await this.eventReader!.read();
+
+      if (value) {
+        yield value;
+      }
+
+      isDone = done;
     }
   }
 
@@ -95,7 +108,11 @@ export class Screen {
    * Restore `STDIN` and `STDOUT` to normal working order
    */
   async cleanup() {
-    await this.backend.cleanup?.();
+    await this.eventReader?.cancel();
+    this.eventReader?.releaseLock();
+
     await this.eventSource.cancel();
+
+    await this.backend.cleanup?.();
   }
 }
