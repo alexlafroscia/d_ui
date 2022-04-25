@@ -12,12 +12,23 @@ import {
 } from "./events/mod.ts";
 import { DrawableFactory } from "./drawable/mod.ts";
 import { mergeReadableStreams } from "./utils/streams.ts";
+import { isExitEvent } from "./reducers/exit.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
 interface ScreenOptions {
   backend?: Backend;
   eventSource?: ReadableStream<Event>;
+}
+
+/**
+ * Options that can be provided when subscribing to the event source for the screen
+ */
+interface EventIterableOptions {
+  /**
+   * When provided, the event iterable will halt when it seems like the user is trying to exit
+   */
+  handleExitIntent?: boolean;
 }
 
 export class Screen {
@@ -86,7 +97,11 @@ export class Screen {
     });
   }
 
-  async *events(): AsyncIterable<Event> {
+  async *events(
+    config: EventIterableOptions = {},
+  ): AsyncIterable<Event> {
+    const { handleExitIntent = false } = config;
+
     if (!this.eventReader) {
       this.eventReader = this.eventSource.getReader();
     }
@@ -97,6 +112,12 @@ export class Screen {
       const { done, value } = await this.eventReader!.read();
 
       if (value) {
+        // If the user wants to automatically exit on `CTRL-C`, do so
+        // This can avoid them needing to keep track of the exit state on their own
+        if (handleExitIntent && isExitEvent(value)) {
+          return;
+        }
+
         yield value;
       }
 

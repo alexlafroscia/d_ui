@@ -20,6 +20,34 @@ Deno.test("cannot use the constructor directly", () => {
   );
 });
 
+Deno.test("subscribing to events", async (t) => {
+  await t.step("default subscription behavior", async () => {
+    const { screen, eventSource } = await createScreen();
+    const eventIterable = screen.events()
+      [Symbol.asyncIterator]();
+
+    eventSource.emit({ type: "ControlInputEvent", key: "ETX" });
+
+    assertEquals(await eventIterable.next(), {
+      done: false,
+      value: { type: "ControlInputEvent", key: "ETX" },
+    });
+  });
+
+  await t.step("automatically stopping the event iterable", async () => {
+    const { screen, eventSource } = await createScreen();
+    const eventIterable = screen.events({ handleExitIntent: true })
+      [Symbol.asyncIterator]();
+
+    eventSource.emit({ type: "ControlInputEvent", key: "ETX" });
+
+    assertEquals(await eventIterable.next(), {
+      done: true,
+      value: undefined,
+    });
+  });
+});
+
 Deno.test("rendering", async (t) => {
   await t.step("without JSX", async function () {
     const { screen, backend } = await createScreen();
