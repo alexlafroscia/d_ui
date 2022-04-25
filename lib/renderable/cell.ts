@@ -11,4 +11,16 @@ export class Cell {
     this.foreground = foreground;
     this.background = background;
   }
+
+  isEqual(other: Cell): boolean {
+    if (this === other) {
+      return true;
+    }
+
+    return this.content === other.content &&
+      this.foreground === other.foreground &&
+      this.background === other.background;
+  }
 }
+
+const EMPTY_CELL = Object.freeze(new Cell(" "));
