@@ -21,6 +21,10 @@ export class Cell {
       this.foreground === other.foreground &&
       this.background === other.background;
   }
+
+  isEmpty(): boolean {
+    return this.isEqual(EMPTY_CELL);
+  }
 }
 
-const EMPTY_CELL = Object.freeze(new Cell(" "));
+export const EMPTY_CELL = Object.freeze(new Cell(" "));

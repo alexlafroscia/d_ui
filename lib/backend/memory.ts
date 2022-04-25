@@ -1,5 +1,5 @@
 import { Backend } from "./mod.ts";
-import { Cell } from "../renderable/mod.ts";
+import { Cell, EMPTY_CELL } from "../renderable/cell.ts";
 import { Matrix, Point } from "../matrix/mod.ts";
 
 export class MemoryBackend extends Backend {
@@ -8,7 +8,7 @@ export class MemoryBackend extends Backend {
   constructor(height: number, width: number) {
     super();
 
-    this.matrix = new Matrix(height, width, new Cell(" "));
+    this.matrix = new Matrix(height, width, EMPTY_CELL);
   }
 
   get height() {

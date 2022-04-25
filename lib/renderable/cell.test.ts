@@ -39,3 +39,9 @@ Deno.test("testing for equality", async (t) => {
     );
   });
 });
+
+Deno.test("checking if the cell is empty", () => {
+  assertEquals(new Cell(" ").isEmpty(), true);
+  assertEquals(new Cell("b").isEmpty(), false);
+  assertEquals(new Cell(" ", Colors.Red).isEmpty(), false);
+});

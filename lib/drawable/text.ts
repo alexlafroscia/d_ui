@@ -1,5 +1,5 @@
 import { Matrix } from "../matrix/mod.ts";
-import { Cell } from "../renderable/mod.ts";
+import { Cell, EMPTY_CELL } from "../renderable/cell.ts";
 import { Canvas, Drawable } from "./drawable.ts";
 import { Color } from "../color/mod.ts";
 
@@ -109,7 +109,7 @@ export class Text extends Drawable {
         // 1. Write an empty space to this location
         // 2. Update our data store, to avoid re-writing this location in the future
         if (value === REPLACE) {
-          this.canvas.set({ x, y }, new Cell(" "));
+          this.canvas.set({ x, y }, EMPTY_CELL);
           this.buffer.set({ x, y }, EMPTY);
           continue;
         }

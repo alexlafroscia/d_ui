@@ -1,4 +1,4 @@
-import { Cell } from "../lib/renderable/mod.ts";
+import { Cell, EMPTY_CELL } from "../lib/renderable/cell.ts";
 import { Matrix } from "../lib/matrix/mod.ts";
 import { Canvas, Drawable } from "../lib/drawable/mod.ts";
 import { MemoryBackend } from "../lib/backend/mod.ts";
@@ -29,7 +29,7 @@ export class Filler extends Drawable {
 }
 
 export function createCanvas(height = 8, width = 8): Matrix<Cell> {
-  return new Matrix(height, width, new Cell(" "));
+  return new Matrix(height, width, EMPTY_CELL);
 }
 
 export async function createScreen(height = 8, width = 8) {
