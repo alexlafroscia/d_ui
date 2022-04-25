@@ -2,6 +2,7 @@ import { assertSpyCall, assertSpyCalls, stub } from "mock";
 import { createCanvas } from "$test-helpers";
 import { Text } from "./text.ts";
 import { Cell } from "../renderable/mod.ts";
+import { Colors } from "../color/mod.ts";
 
 Deno.test("writing a string without wrapping", () => {
   const canvas = createCanvas(1, 100);
@@ -79,6 +80,32 @@ Deno.test("changing the content", () => {
 
   assertSpyCall(renderCell, 1, {
     args: [{ x: 0, y: 0 }, new Cell(" ")],
+    self: canvas,
+  });
+});
+
+Deno.test("configuring colors as props", () => {
+  const canvas = createCanvas(1, 3);
+  const content = "abc";
+  const text = new Text(
+    { wrap: true, foregroundColor: Colors.Red, backgroundColor: Colors.Blue },
+    [content],
+    canvas,
+  );
+  const renderCell = stub(canvas, "set");
+
+  text.draw();
+
+  assertSpyCall(renderCell, 0, {
+    args: [{ x: 0, y: 0 }, new Cell("a", Colors.Red, Colors.Blue)],
+    self: canvas,
+  });
+  assertSpyCall(renderCell, 1, {
+    args: [{ x: 1, y: 0 }, new Cell("b", Colors.Red, Colors.Blue)],
+    self: canvas,
+  });
+  assertSpyCall(renderCell, 2, {
+    args: [{ x: 2, y: 0 }, new Cell("c", Colors.Red, Colors.Blue)],
     self: canvas,
   });
 });

@@ -1,6 +1,7 @@
 import { Matrix } from "../matrix/mod.ts";
 import { Cell } from "../renderable/mod.ts";
 import { Canvas, Drawable } from "./drawable.ts";
+import { Color } from "../color/mod.ts";
 
 // Empty cells that do not need to be written to
 const EMPTY = Symbol("Empty BufferCell");
@@ -11,6 +12,8 @@ const REPLACE = Symbol("Replace BufferCell");
 type BufferCell = string | typeof EMPTY | typeof REPLACE;
 
 interface TextWidgetConfig {
+  foregroundColor?: Color;
+  backgroundColor?: Color;
   wrap?: boolean;
 }
 
@@ -32,6 +35,8 @@ export class Text extends Drawable {
    */
   private buffer: Matrix<BufferCell>;
 
+  private backgroundColor?: Color;
+  private foregroundColor?: Color;
   private wrap: boolean;
 
   constructor(
@@ -41,6 +46,8 @@ export class Text extends Drawable {
   ) {
     super(view);
 
+    this.backgroundColor = config?.backgroundColor;
+    this.foregroundColor = config?.foregroundColor;
     this.wrap = config?.wrap ?? false;
     this.buffer = new Matrix<BufferCell>(view.height, view.width, EMPTY);
 
@@ -112,7 +119,10 @@ export class Text extends Drawable {
           break;
         }
 
-        this.canvas.set({ x, y }, new Cell(value));
+        this.canvas.set(
+          { x, y },
+          new Cell(value, this.foregroundColor, this.backgroundColor),
+        );
       }
     }
   }
