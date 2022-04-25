@@ -63,3 +63,20 @@ Deno.test("hooking into `set`", () => {
     args: [{ x: 0, y: 0 }, 1],
   });
 });
+
+Deno.test("iterating through values", () => {
+  const matrix = new Matrix(2, 2, 0);
+
+  matrix.set({ x: 0, y: 0 }, 1);
+  matrix.set({ x: 1, y: 0 }, 2);
+  matrix.set({ x: 0, y: 1 }, 3);
+  matrix.set({ x: 1, y: 1 }, 4);
+
+  const iterable = matrix[Symbol.iterator]();
+
+  assertEquals(iterable.next(), { done: false, value: [{ x: 0, y: 0 }, 1] });
+  assertEquals(iterable.next(), { done: false, value: [{ x: 1, y: 0 }, 2] });
+  assertEquals(iterable.next(), { done: false, value: [{ x: 0, y: 1 }, 3] });
+  assertEquals(iterable.next(), { done: false, value: [{ x: 1, y: 1 }, 4] });
+  assertEquals(iterable.next(), { done: true, value: undefined });
+});

@@ -1,3 +1,5 @@
+import { enumerate } from "https://deno.land/x/itertools@v1.0.2/mod.ts";
+
 import { MatrixLike } from "./matrix-like.ts";
 import { Point } from "./point.ts";
 
@@ -41,5 +43,13 @@ export class Matrix<T> extends MatrixLike<T> {
     const { x, y } = point;
 
     return (this.rows[y][x] = value);
+  }
+
+  *[Symbol.iterator](): IterableIterator<[Point, T]> {
+    for (const [y, row] of enumerate(this.rows)) {
+      for (const [x, value] of enumerate(row)) {
+        yield [{ x, y }, value];
+      }
+    }
   }
 }
