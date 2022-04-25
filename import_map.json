@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "asserts": "https://deno.land/std@0.136.0/testing/asserts.ts",
+    "mock": "https://deno.land/std@0.136.0/testing/mock.ts",
+    "$test-helpers": "./test/helpers.ts"
+  }
+}

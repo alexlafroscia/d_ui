@@ -3,5 +3,5 @@
   "compilerOptions": {
     "jsxFactory": "h"
   },
-  "importMap": "./importmap.json"
+  "importMap": "./import_map.json"
 }
