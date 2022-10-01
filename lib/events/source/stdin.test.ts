@@ -1,22 +1,22 @@
 import { readableStreamFromIterable } from "https://deno.land/std@0.133.0/streams/mod.ts";
 
 import { assertEquals } from "asserts";
-import { assertSpyCall, Spy, stub } from "mock";
+import { assertSpyCall, type Spy, spy } from "mock";
 import { RawStdinReadableStream, RelevantStdin } from "./stdin.ts";
 
 Deno.test('setting "raw mode" on STDIN', async (t) => {
   const fakeStdin: RelevantStdin = {
-    readable: readableStreamFromIterable(function* () {
-      while (true) {
-        yield Uint8Array.from(["a".charCodeAt(0)]);
-      }
-    }()),
+    readable: readableStreamFromIterable(
+      (function* () {
+        while (true) {
+          yield Uint8Array.from(["a".charCodeAt(0)]);
+        }
+      })(),
+    ),
 
-    rid: 0,
+    // Stub the `setRaw` API
+    setRaw: spy<typeof Deno.stdin.setRaw>(),
   };
-
-  // Stub the `setRaw` API
-  const setRaw: Spy<typeof Deno> = stub(Deno, "setRaw");
 
   // Passing a faux `StdIn` to avoid calling `setRaw`
   const eventSource = new RawStdinReadableStream(fakeStdin);
@@ -28,15 +28,12 @@ Deno.test('setting "raw mode" on STDIN', async (t) => {
       value: Uint8Array.from(["a".charCodeAt(0)]),
     });
 
-    assertSpyCall(setRaw, 0, {
-      args: [fakeStdin.rid, true],
+    assertSpyCall(fakeStdin.setRaw as Spy, 0, {
+      args: [true],
     });
 
-    assertSpyCall(setRaw, 1, {
-      args: [fakeStdin.rid, false],
+    assertSpyCall(fakeStdin.setRaw as Spy, 1, {
+      args: [false],
     });
   });
-
-  // Re-set `setRaw` function
-  setRaw.restore();
 });

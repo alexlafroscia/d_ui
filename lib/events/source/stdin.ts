@@ -1,6 +1,6 @@
 import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
 
-export type RelevantStdin = Pick<typeof Deno.stdin, "rid" | "readable">;
+export type RelevantStdin = Pick<typeof Deno.stdin, "setRaw" | "readable">;
 
 /**
  * Wraps the `Deno.stdin` readable stream so that we can set the stream into "raw mode"
@@ -17,15 +17,15 @@ export class RawStdinReadableStream extends ReadableStream<Uint8Array> {
       async pull(controller) {
         log.getLogger("d_ui").debug(`StdinReader: starting read`);
 
-        Deno.setRaw(stdin.rid, true);
+        stdin.setRaw(true);
 
         const { done, value } = await reader.read();
 
-        Deno.setRaw(stdin.rid, false);
+        stdin.setRaw(false);
 
-        log.getLogger("d_ui").debug(
-          `StdinReader: read ${value} (done?: ${done})`,
-        );
+        log
+          .getLogger("d_ui")
+          .debug(`StdinReader: read ${value} (done?: ${done})`);
 
         if (value) {
           controller.enqueue(value);
