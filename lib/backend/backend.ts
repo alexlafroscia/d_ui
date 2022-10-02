@@ -12,8 +12,8 @@ export abstract class Backend {
 
   private isTransitioning = false;
 
-  abstract height: number;
-  abstract width: number;
+  abstract get height(): number;
+  abstract get width(): number;
 
   protected renderingQueue = new Set<[Point, Cell]>();
 

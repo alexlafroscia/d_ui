@@ -5,8 +5,8 @@ export function withinRange(value: number, min: number, max: number): boolean {
 }
 
 export abstract class MatrixLike<T> {
-  abstract height: number;
-  abstract width: number;
+  abstract get height(): number;
+  abstract get width(): number;
 
   abstract get(point: Point): T;
 
