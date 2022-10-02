@@ -1,6 +1,6 @@
 import { Point } from "./point.ts";
 
-function withinRange(value: number, min: number, max: number): boolean {
+export function withinRange(value: number, min: number, max: number): boolean {
   return value >= min && value <= max;
 }
 
