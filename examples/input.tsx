@@ -32,7 +32,6 @@ try {
       </Rows>,
     );
   }
-} catch (e) {
 } finally {
   await screen.cleanup();
 }
