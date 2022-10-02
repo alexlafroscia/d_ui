@@ -1,4 +1,4 @@
-import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
+import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
 import { tick } from "https://deno.land/x/tick@v1.0.0/mod.ts";
 import { MuxAsyncIterator } from "https://deno.land/std@0.130.0/async/mod.ts";
 

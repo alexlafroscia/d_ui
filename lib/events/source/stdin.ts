@@ -1,4 +1,4 @@
-import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
+import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
 
 export type RelevantStdin = Pick<typeof Deno.stdin, "setRaw" | "readable">;
 

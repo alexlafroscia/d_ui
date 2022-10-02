@@ -1,4 +1,4 @@
-import * as log from "https://deno.land/std@0.135.0/log/mod.ts";
+import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
 
 // If we have permissions to write, write logs to a file
 // Logging to the console isn't useful since we take over the screen!
@@ -17,7 +17,7 @@ export function flushLogs() {
 }
 
 if (logWritePermission.state === "granted") {
-  await log.setup({
+  log.setup({
     handlers: {
       file: fileLogger,
     },
