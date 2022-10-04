@@ -1,5 +1,3 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
-
 import { Cell } from "./renderable/cell.ts";
 import { Matrix } from "./matrix/mod.ts";
 import { Backend, StdoutBackend } from "./backend/mod.ts";
@@ -13,6 +11,9 @@ import {
 import { DrawableFactory } from "./drawable/mod.ts";
 import { mergeReadableStreams } from "./utils/streams.ts";
 import { isExitEvent } from "./reducers/exit.ts";
+import { getLogger } from "./logger.ts";
+
+const logger = getLogger("Screen");
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -41,8 +42,6 @@ export class Screen {
     if (privateSymbol !== CANNOT_USE_CONSTRUCTOR_DIRECTLY) {
       throw new Error("You may not use the `Screen` constructor directly");
     }
-
-    log.getLogger("d_ui").debug("Screen: testing");
 
     const { backend, eventSource } = options;
 

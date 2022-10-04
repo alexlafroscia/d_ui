@@ -3,6 +3,10 @@ import {
   deferred,
 } from "https://deno.land/std@0.133.0/async/mod.ts";
 
+import { getLogger } from "../logger.ts";
+
+const mergeReadableStreamsLogger = getLogger("mergeReadableStreams");
+
 /**
  * Merge multiple streams into a single one, not taking order into account.
  * If a stream ends before other ones, the other will continue adding data,
@@ -47,6 +51,8 @@ export function mergeReadableStreams<T>(
     },
 
     async cancel() {
+      mergeReadableStreamsLogger.debug("cancelling merged stream");
+
       abortController.abort();
 
       await allStreamsComplete;
@@ -54,9 +60,13 @@ export function mergeReadableStreams<T>(
       await Promise.all(streams.map(async (stream) => {
         await stream.cancel();
       }));
+
+      mergeReadableStreamsLogger.debug("all merged streams cancelled");
     },
   });
 }
+
+const iterableFromStreamLogger = getLogger("iterableFromStream");
 
 export async function* iterableFromStream<T>(
   stream: ReadableStream<T>,
@@ -78,9 +88,16 @@ export async function* iterableFromStream<T>(
     }
   } catch (e) {
     if (!(e instanceof DOMException)) {
+      iterableFromStreamLogger.debug(
+        `reading stream ${stream.constructor.name} aborted`,
+      );
       throw e;
     }
   } finally {
+    iterableFromStreamLogger.debug(
+      `cleaning up ${stream.constructor.name} reader`,
+    );
+
     await reader.cancel();
     reader.releaseLock();
   }

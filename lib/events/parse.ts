@@ -1,11 +1,12 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
-
 import { isControlSequence, parseControlCharacter } from "./ansi.ts";
 import { ReverseControlCharacterMap } from "./ascii.ts";
 import { ControlInputEvent, Event, PrintableInputEvent } from "./event.ts";
+import { getLogger } from "../logger.ts";
+
+const logger = getLogger("parseEventFromChunk");
 
 export function parseEventFromChunk(chunk: Uint8Array): Event | undefined {
-  log.getLogger("d_ui").debug(`parseEventFromChunk: received ${chunk}`);
+  logger.debug(`received ${chunk}`);
 
   if (isControlSequence(chunk)) {
     const key = parseControlCharacter(chunk);
@@ -22,8 +23,8 @@ export function parseEventFromChunk(chunk: Uint8Array): Event | undefined {
 
   // Entered code is outside of ASCII; not something supported yet
   if (code > 127) {
-    log.getLogger("d_ui").debug(
-      `parseEventFromChunk: Input code ${code} not recognized as a supported ASCII value`,
+    logger.debug(
+      `Input code ${code} not recognized as a supported ASCII value`,
     );
     return;
   }

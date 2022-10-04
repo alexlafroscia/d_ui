@@ -1,11 +1,12 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
-
 import { Point } from "../../matrix/mod.ts";
 import { partition, Size } from "./partition.ts";
 import { Canvas, Drawable, DrawableFactory } from "../../drawable/mod.ts";
 import { Cell } from "../../renderable/mod.ts";
 import { View } from "../view.ts";
 import { zip } from "../../utils/iter.ts";
+import { getLogger } from "../../logger.ts";
+
+const logger = getLogger("Columns");
 
 interface Props {
   sizes: Size[];
@@ -24,9 +25,7 @@ export class Columns extends Drawable implements Canvas {
     const widths = partition(this.canvas.width, ...sizes);
     let widthUsed = 0;
 
-    log.getLogger("d_ui").debug(
-      `Split width ${this.canvas.width} into ${widths}`,
-    );
+    logger.debug(`Split width ${this.canvas.width} into ${widths}`);
 
     this.childViews = zip(children, widths).map(([childFactory, width]) => {
       const view = new View(

@@ -23,11 +23,6 @@ if (logWritePermission.state === "granted") {
     },
 
     loggers: {
-      default: {
-        level: "DEBUG",
-        handlers: ["file"],
-      },
-
       d_ui: {
         level: "DEBUG",
         handlers: ["file"],
