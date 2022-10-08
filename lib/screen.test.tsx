@@ -12,7 +12,7 @@ Deno.test("cannot use the constructor directly", () => {
     () => {
       new Screen({
         backend: new MemoryBackend(4, 2),
-        eventSource: new ManualEventSource(),
+        eventStream: new ManualEventSource(),
       }, Symbol());
     },
     undefined,
@@ -22,11 +22,11 @@ Deno.test("cannot use the constructor directly", () => {
 
 Deno.test("subscribing to events", async (t) => {
   await t.step("default subscription behavior", async () => {
-    const { screen, eventSource } = await createScreen();
+    const { screen, eventStream } = await createScreen();
     const eventIterable = screen.events()
       [Symbol.asyncIterator]();
 
-    eventSource.emit({ type: "ControlInputEvent", key: "ETX" });
+    eventStream.emit({ type: "ControlInputEvent", key: "ETX" });
 
     assertEquals(await eventIterable.next(), {
       done: false,
@@ -35,11 +35,11 @@ Deno.test("subscribing to events", async (t) => {
   });
 
   await t.step("automatically stopping the event iterable", async () => {
-    const { screen, eventSource } = await createScreen();
+    const { screen, eventStream } = await createScreen();
     const eventIterable = screen.events({ handleExitIntent: true })
       [Symbol.asyncIterator]();
 
-    eventSource.emit({ type: "ControlInputEvent", key: "ETX" });
+    eventStream.emit({ type: "ControlInputEvent", key: "ETX" });
 
     assertEquals(await eventIterable.next(), {
       done: true,
@@ -84,14 +84,14 @@ Deno.test("cleanup", async () => {
   }
 
   const backend = new MemoryBackendWithCleanup(4, 2);
-  const eventSource = new ManualEventSource();
+  const eventStream = new ManualEventSource();
 
   const backendCleanup = stub(backend, "cleanup");
-  const eventSourceCancel = stub(eventSource, "cancel");
+  const eventSourceCancel = stub(eventStream, "cancel");
 
   const screen = await Screen.create({
     backend,
-    eventSource,
+    eventStream,
   });
 
   await screen.cleanup();

@@ -34,8 +34,8 @@ export function createCanvas(height = 8, width = 8): Matrix<Cell> {
 
 export async function createScreen(height = 8, width = 8) {
   const backend = new MemoryBackend(height, width);
-  const eventSource = new ManualEventSource();
-  const screen = await Screen.create({ backend, eventSource });
+  const eventStream = new ManualEventSource();
+  const screen = await Screen.create({ backend, eventStream });
 
-  return { backend, eventSource, screen };
+  return { backend, eventStream, screen };
 }
