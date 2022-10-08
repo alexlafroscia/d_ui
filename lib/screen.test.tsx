@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "asserts";
-import { assertSpyCall, stub } from "mock";
+import { assertSpyCall, assertSpyCalls, stub } from "mock";
 import { createScreen, Filler } from "$test-helpers";
 
 import { Screen } from "./screen.ts";
@@ -78,28 +78,66 @@ Deno.test("rendering", async (t) => {
   });
 });
 
-Deno.test("cleanup", async () => {
+Deno.test("cleanup", async (t) => {
   class MemoryBackendWithCleanup extends MemoryBackend {
     cleanup() {}
   }
 
-  const backend = new MemoryBackendWithCleanup(4, 2);
-  const eventStream = new ManualEventSource();
+  await t.step("with the exit option", async () => {
+    const exit = stub(Deno, "exit");
 
-  const backendCleanup = stub(backend, "cleanup");
-  const eventSourceCancel = stub(eventStream, "cancel");
+    const backend = new MemoryBackendWithCleanup(4, 2);
+    const eventStream = new ManualEventSource();
 
-  const screen = await Screen.create({
-    backend,
-    eventStream,
+    const backendCleanup = stub(backend, "cleanup");
+    const eventSourceCancel = stub(eventStream, "cancel");
+
+    const screen = await Screen.create({
+      backend,
+      eventStream,
+    });
+
+    await screen.cleanup();
+
+    assertSpyCall(backendCleanup, 0, {
+      args: [],
+    });
+    assertSpyCall(eventSourceCancel, 0, {
+      args: [],
+    });
+
+    assertSpyCall(exit, 0, {
+      args: [0],
+    });
+
+    exit.restore();
   });
 
-  await screen.cleanup();
+  await t.step("without the exit option", async () => {
+    const exit = stub(Deno, "exit");
 
-  assertSpyCall(backendCleanup, 0, {
-    args: [],
-  });
-  assertSpyCall(eventSourceCancel, 0, {
-    args: [],
+    const backend = new MemoryBackendWithCleanup(4, 2);
+    const eventStream = new ManualEventSource();
+
+    const backendCleanup = stub(backend, "cleanup");
+    const eventSourceCancel = stub(eventStream, "cancel");
+
+    const screen = await Screen.create({
+      backend,
+      eventStream,
+    });
+
+    await screen.cleanup({ exit: false });
+
+    assertSpyCall(backendCleanup, 0, {
+      args: [],
+    });
+    assertSpyCall(eventSourceCancel, 0, {
+      args: [],
+    });
+
+    assertSpyCalls(exit, 0);
+
+    exit.restore();
   });
 });

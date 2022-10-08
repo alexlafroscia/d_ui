@@ -32,6 +32,17 @@ interface EventIterableOptions {
   handleExitIntent?: boolean;
 }
 
+interface CleanupOptions {
+  /**
+   * If the `exit` option is provided, the program will be exited automatically
+   * once cleanup is complete. Without this behavior, Deno will "hang", waiting
+   * for more work to execute while there is no more to do. You can disable the
+   * explicit call to `Deno.exit` by setting the `exit` argument to `false`.
+   * @default true
+   */
+  exit?: boolean;
+}
+
 export class Screen {
   private matrix: Matrix<Cell>;
   private backend: Backend;
@@ -122,7 +133,7 @@ export class Screen {
   /**
    * Restore `STDIN` and `STDOUT` to normal working order
    */
-  async cleanup() {
+  async cleanup({ exit = true }: CleanupOptions = {}) {
     logger.debug("starting cleanup");
 
     await this.eventStream.cancel();
@@ -132,5 +143,9 @@ export class Screen {
     await this.backend.cleanup?.();
 
     logger.debug("backend cleanup complete");
+
+    if (exit) {
+      Deno.exit(0);
+    }
   }
 }
