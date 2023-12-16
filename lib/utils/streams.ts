@@ -102,3 +102,22 @@ export async function* iterableFromStream<T>(
     reader.releaseLock();
   }
 }
+
+export async function writeToStream(
+  stream: WritableStream<Uint8Array>,
+  input: string,
+): Promise<void> {
+  const writer = stream.getWriter();
+
+  await writer.ready;
+
+  writer.write(
+    Uint8Array.from(
+      input.split("").map((character) => character.charCodeAt(0)),
+    ),
+  );
+
+  await writer.ready;
+
+  writer.releaseLock();
+}

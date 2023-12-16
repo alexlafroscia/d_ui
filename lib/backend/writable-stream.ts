@@ -1,7 +1,7 @@
 import * as EscapeSequence from "https://deno.land/x/terminal@0.1.0-dev.3/src/escape_sequences.ts";
 import { reduce } from "https://deno.land/x/iter@v2.3.0/mod.ts";
-import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util.ts";
 
+import { writeToStream } from "../utils/streams.ts";
 import { Cell } from "../renderable/mod.ts";
 import { Backend } from "./mod.ts";
 
@@ -24,12 +24,12 @@ function toBufferSegment(cell: Cell, x: number, y: number) {
   return buffer;
 }
 
-export class WriterBackend extends Backend {
+export class WritableStreamBackend extends Backend {
   height: number;
   width: number;
 
   constructor(
-    protected outputStream: Deno.Writer,
+    protected outputStream: WritableStream<Uint8Array>,
     height: number,
     width: number,
   ) {
@@ -39,9 +39,15 @@ export class WriterBackend extends Backend {
     this.width = width;
   }
 
-  async write() {
+  async writeString(input: string) {
     await writeToStream(
       this.outputStream,
+      input,
+    );
+  }
+
+  override async write() {
+    await this.writeString(
       reduce(
         this.renderingQueue,
         (acc, [point, cell]) => acc + toBufferSegment(cell, point.x, point.y),

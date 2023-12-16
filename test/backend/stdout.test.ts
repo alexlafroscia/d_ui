@@ -1,8 +1,7 @@
 import { assertRejects, assertThrows } from "asserts";
-import { StringWriter } from "https://deno.land/std@0.102.0/io/mod.ts";
 import { StdoutBackend } from "../../lib/backend/stdout.ts";
 
-const outputStream = new StringWriter("test");
+const outputStream = new WritableStream<Uint8Array>();
 const consoleSize = { columns: 4, rows: 4 };
 
 Deno.test("cannot use the constructor directly", () => {

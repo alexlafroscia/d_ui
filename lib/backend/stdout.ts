@@ -1,6 +1,5 @@
 import * as EscapeSequence from "https://deno.land/x/terminal@0.1.0-dev.3/src/escape_sequences.ts";
-import { writeToStream } from "https://deno.land/x/terminal@0.1.0-dev.3/src/util.ts";
-import { WriterBackend } from "./writer.ts";
+import { WritableStreamBackend } from "./writable-stream.ts";
 
 const CANNOT_USE_CONSTRUCTOR_DIRECTLY = Symbol();
 
@@ -9,11 +8,11 @@ interface ConsoleSize {
   rows: number;
 }
 
-export class StdoutBackend extends WriterBackend {
+export class StdoutBackend extends WritableStreamBackend {
   private static instance: StdoutBackend | undefined;
 
   constructor(
-    outputStream: Deno.Writer,
+    outputStream: WritableStream,
     { rows, columns }: ConsoleSize,
     privateSymbol: symbol,
   ) {
@@ -33,8 +32,8 @@ export class StdoutBackend extends WriterBackend {
   }
 
   static async create(
-    outputStream: Deno.Writer = Deno.stdout,
-    consoleSize: ConsoleSize = Deno.consoleSize(Deno.stdout.rid),
+    outputStream: WritableStream = Deno.stdout.writable,
+    consoleSize: ConsoleSize = Deno.consoleSize(),
   ) {
     const instance = new StdoutBackend(
       outputStream,
@@ -43,8 +42,7 @@ export class StdoutBackend extends WriterBackend {
     );
 
     // Set up the output stream
-    await writeToStream(
-      instance.outputStream,
+    await instance.writeString(
       EscapeSequence.SMCUP +
         EscapeSequence.SAVE_CURSOR_POS +
         EscapeSequence.HIDE_CURSOR +
@@ -56,8 +54,7 @@ export class StdoutBackend extends WriterBackend {
   }
 
   async cleanup() {
-    await writeToStream(
-      this.outputStream,
+    await this.writeString(
       EscapeSequence.DISABLE_MOUSE_REPORT +
         EscapeSequence.CLS +
         EscapeSequence.RMCUP +
