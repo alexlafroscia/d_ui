@@ -3,5 +3,10 @@
   "compilerOptions": {
     "jsxFactory": "h"
   },
-  "importMap": "./import_map.json"
+  "importMap": "./import_map.json",
+  "tasks": {
+    "example:input": "deno run --allow-write=./log.txt ./examples/input.tsx",
+    "example:redux": "deno run --allow-write=./log.txt ./examples/redux.tsx",
+    "example:run": "deno run --allow-write=./log.txt ./examples/run.tsx"
+  }
 }
