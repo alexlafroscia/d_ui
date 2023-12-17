@@ -5,7 +5,9 @@ import { ReduxTransformStream } from "https://deno.land/x/redux_transform_stream
 import { Event, Fill, h, Rows, Screen, Text } from "../lib/mod.ts";
 import { stringReducer } from "../lib/reducers/mod.ts";
 
-const screen = await Screen.create();
+import { flushLogs } from "./setup-log.ts";
+
+await using screen = await Screen.create();
 const eventStream = readableStreamFromIterable(
   screen.events({
     handleExitIntent: true,
@@ -23,15 +25,13 @@ const states = eventStream.pipeThrough(new ReduxTransformStream(store));
 
 /* === Rendering Loop === */
 
-try {
-  for await (const state of states) {
-    await screen.render(
-      <Rows sizes={[1, Fill]}>
-        <Text>Try typing!</Text>
-        <Text>{state}</Text>
-      </Rows>,
-    );
-  }
-} finally {
-  await screen.cleanup();
+for await (const state of states) {
+  await screen.render(
+    <Rows sizes={[1, Fill]}>
+      <Text>Try typing!</Text>
+      <Text>{state}</Text>
+    </Rows>,
+  );
 }
+
+flushLogs();

@@ -90,7 +90,6 @@ Deno.test("cleanup", async (t) => {
     const eventStream = new ManualEventSource();
 
     const backendCleanup = stub(backend, "cleanup");
-    const eventSourceCancel = stub(eventStream, "cancel");
 
     const screen = await Screen.create({
       backend,
@@ -100,9 +99,6 @@ Deno.test("cleanup", async (t) => {
     await screen.cleanup();
 
     assertSpyCall(backendCleanup, 0, {
-      args: [],
-    });
-    assertSpyCall(eventSourceCancel, 0, {
       args: [],
     });
 
@@ -120,7 +116,6 @@ Deno.test("cleanup", async (t) => {
     const eventStream = new ManualEventSource();
 
     const backendCleanup = stub(backend, "cleanup");
-    const eventSourceCancel = stub(eventStream, "cancel");
 
     const screen = await Screen.create({
       backend,
@@ -130,9 +125,6 @@ Deno.test("cleanup", async (t) => {
     await screen.cleanup({ exit: false });
 
     assertSpyCall(backendCleanup, 0, {
-      args: [],
-    });
-    assertSpyCall(eventSourceCancel, 0, {
       args: [],
     });
 

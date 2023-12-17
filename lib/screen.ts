@@ -115,19 +115,33 @@ export class Screen {
     });
   }
 
-  async *events(
+  events(
     config: EventIterableOptions = {},
-  ): AsyncIterable<Event> {
-    for await (const event of this.eventStream) {
-      if (config.handleExitIntent && isExitEvent(event)) {
-        logger.debug(
-          "received exit intent; exiting event iterator",
-        );
-        return;
-      }
+  ): ReadableStream<Event> {
+    let stream = this.eventStream;
 
-      yield event;
+    if (config.handleExitIntent) {
+      stream = stream.pipeThrough(
+        new TransformStream({
+          transform(chunk, controller) {
+            if (isExitEvent(chunk)) {
+              logger.debug(
+                "received exit intent; exiting event iterator",
+              );
+              controller.terminate();
+            } else {
+              controller.enqueue(chunk);
+            }
+          },
+        }),
+      );
     }
+
+    return stream;
+  }
+
+  [Symbol.asyncDispose]() {
+    return this.cleanup();
   }
 
   /**
@@ -135,10 +149,6 @@ export class Screen {
    */
   async cleanup({ exit = true }: CleanupOptions = {}) {
     logger.debug("starting cleanup");
-
-    await this.eventStream.cancel();
-
-    logger.debug("event source cancelled");
 
     await this.backend.cleanup?.();
 

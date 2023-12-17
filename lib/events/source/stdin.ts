@@ -34,6 +34,14 @@ export class RawStdinReadableStream extends ReadableStream<Uint8Array> {
           controller.close();
         }
       },
+
+      async cancel(reason) {
+        log.getLogger("d_ui").debug(
+          `StdinReader: cancelling (reason: ${reason ?? "unknown"})`,
+        );
+
+        await reader.cancel();
+      },
     });
   }
 }

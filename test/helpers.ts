@@ -1,3 +1,5 @@
+import { FakeTime as UpstreamFakeTime } from "https://deno.land/std@0.209.0/testing/time.ts";
+
 import { Cell, EMPTY_CELL } from "../lib/renderable/cell.ts";
 import { Matrix } from "../lib/matrix/mod.ts";
 import { Canvas, Drawable } from "../lib/drawable/mod.ts";
@@ -38,4 +40,11 @@ export async function createScreen(height = 8, width = 8) {
   const screen = await Screen.create({ backend, eventStream });
 
   return { backend, eventStream, screen };
+}
+
+export class FakeTime extends UpstreamFakeTime {
+  // Make the `FakeTime` class work with `using`
+  [Symbol.dispose]() {
+    this.restore();
+  }
 }

@@ -1,6 +1,4 @@
 import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
-import { tick } from "https://deno.land/x/tick@v1.0.0/mod.ts";
-import { MuxAsyncIterator } from "https://deno.land/std@0.130.0/async/mod.ts";
 
 import {
   Columns,
@@ -13,11 +11,15 @@ import {
   Text,
   View,
 } from "../lib/mod.ts";
-import { map } from "../lib/utils/async-iter.ts";
+import { mergeReadableStreams } from "../lib/utils/streams.ts";
+import {
+  type TickEvent,
+  TickReadableStream,
+} from "../lib/events/source/tick.ts";
 
-import "./setup-log.ts";
+import { flushLogs } from "./setup-log.ts";
 
-const screen = await Screen.create();
+await using screen = await Screen.create();
 
 function BottomBar({ padding }: { padding: number }) {
   return (
@@ -27,9 +29,12 @@ function BottomBar({ padding }: { padding: number }) {
   );
 }
 
-const events = new MuxAsyncIterator<Event | { type: "TickEvent" }>();
-events.add(screen.events());
-events.add(map(() => ({ type: "TickEvent" }), tick(1_000)));
+type LoopEvent = Event | TickEvent;
+
+const events = mergeReadableStreams<LoopEvent>(
+  screen.events(),
+  new TickReadableStream(1_000),
+);
 
 let seconds = 0;
 
@@ -64,6 +69,8 @@ try {
   }
 } catch (e) {
   log.error(e.message);
-} finally {
-  await screen.cleanup();
 }
+
+log.getLogger("d_ui").debug("Finished the rendering loop");
+
+flushLogs();
