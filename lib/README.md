@@ -25,26 +25,22 @@ import {
 } from "https://deno.land/x/d_ui/mod.ts";
 
 // Create a `Screen` instance to get started
-const screen = await Screen.create();
+await using screen = await Screen.create();
 
-try {
-  // `screen` emits events from `STDOUT` by default
-  for await (const event of screen.events()) {
-    // Stop the event loop if the user hits `CTL-C`
-    if (event.type === "ControlInputEvent" && event.key === "ETX") {
-      break;
-    }
-
-    await screen.render(
-      <Columns sizes={[10, Relative.Third, Fill]}>
-        <Text>Hello</Text>
-        <Text>My</Text>
-        <Text>Friend</Text>
-      </Columns>,
-    );
+// `screen` emits events from `STDOUT` by default
+for await (const event of screen.events()) {
+  // Stop the event loop if the user hits `CTL-C`
+  if (event.type === "ControlInputEvent" && event.key === "ETX") {
+    break;
   }
-} finally {
-  await screen.cleanup();
+
+  await screen.render(
+    <Columns sizes={[10, Relative.Third, Fill]}>
+      <Text>Hello</Text>
+      <Text>My</Text>
+      <Text>Friend</Text>
+    </Columns>,
+  );
 }
 ```
 
