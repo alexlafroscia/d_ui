@@ -1,4 +1,6 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
+import { getLogger } from "../../logger.ts";
+
+const logger = getLogger("StdinReader");
 
 export type RelevantStdin = Pick<typeof Deno.stdin, "setRaw" | "readable">;
 
@@ -15,7 +17,7 @@ export class RawStdinReadableStream extends ReadableStream<Uint8Array> {
       },
 
       async pull(controller) {
-        log.getLogger("d_ui").debug(`StdinReader: starting read`);
+        logger.debug(`starting read`);
 
         stdin.setRaw(true);
 
@@ -23,9 +25,7 @@ export class RawStdinReadableStream extends ReadableStream<Uint8Array> {
 
         stdin.setRaw(false);
 
-        log
-          .getLogger("d_ui")
-          .debug(`StdinReader: read ${value} (done?: ${done})`);
+        logger.debug(`read ${value} (done?: ${done})`);
 
         if (value) {
           controller.enqueue(value);
@@ -36,9 +36,7 @@ export class RawStdinReadableStream extends ReadableStream<Uint8Array> {
       },
 
       async cancel(reason) {
-        log.getLogger("d_ui").debug(
-          `StdinReader: cancelling (reason: ${reason ?? "unknown"})`,
-        );
+        logger.debug(`cancelling (reason: ${reason ?? "unknown"})`);
 
         await reader.cancel();
       },

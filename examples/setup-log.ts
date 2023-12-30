@@ -1,4 +1,4 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
+import { log } from "../lib/logger.ts";
 
 // If we have permissions to write, write logs to a file
 // Logging to the console isn't useful since we take over the screen!

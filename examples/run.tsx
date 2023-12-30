@@ -1,5 +1,3 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
-
 import {
   Columns,
   Event,
@@ -16,9 +14,11 @@ import {
   type TickEvent,
   TickReadableStream,
 } from "../lib/events/source/tick.ts";
+import { getLogger } from "../lib/logger.ts";
 
 import { flushLogs } from "./setup-log.ts";
 
+const logger = getLogger("example:run");
 await using screen = await Screen.create();
 
 function BottomBar({ padding }: { padding: number }) {
@@ -68,9 +68,9 @@ try {
     );
   }
 } catch (e) {
-  log.error(e.message);
+  logger.error(e.message);
 }
 
-log.getLogger("d_ui").debug("Finished the rendering loop");
+logger.debug("Finished the rendering loop");
 
 flushLogs();
