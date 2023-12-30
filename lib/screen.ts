@@ -154,6 +154,8 @@ export class Screen {
 
     logger.debug("backend cleanup complete");
 
+    // Work around Deno/Tokio bug where reading from STDIN can
+    // More info: https://github.com/alexlafroscia/d_ui/issues/3
     if (exit) {
       Deno.exit(0);
     }
